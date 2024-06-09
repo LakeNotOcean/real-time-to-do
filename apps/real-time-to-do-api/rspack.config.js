@@ -15,6 +15,10 @@ module.exports = composePlugins(withNx(), (config) => {
 			dotent: 'dotent',
 			prisma: 'prisma',
 			'@prisma/client': '@prisma/client',
+			'class-validator': 'class-validator',
+			fastify: 'fastify',
+			'@fastify/multipart': '@fastify/multipart',
+			'@blazity/nest-file-fastify': '@blazity/nest-file-fastify',
 		},
 	};
 	return config;
