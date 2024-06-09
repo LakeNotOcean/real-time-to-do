@@ -1,3 +1,4 @@
+import { DbException, Exception, InternalException } from '@common';
 import {
 	CallHandler,
 	ExecutionContext,
@@ -5,11 +6,6 @@ import {
 	Injectable,
 	NestInterceptor,
 } from '@nestjs/common';
-import {
-	DbException,
-	Exception,
-	InternalException,
-} from 'libs/common/src/exceptions';
 import { Observable, catchError } from 'rxjs';
 
 @Injectable()

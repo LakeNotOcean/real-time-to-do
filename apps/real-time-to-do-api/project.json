@@ -13,6 +13,7 @@
 				"target": "node",
 				"outputPath": "dist/apps/real-time-to-do-api",
 				"main": "apps/real-time-to-do-api/src/main.ts",
+				"optimization": true,
 				"tsConfig": "apps/real-time-to-do-api/tsconfig.app.json",
 				"rspackConfig": "apps/real-time-to-do-api/rspack.config.js"
 			},

@@ -5,6 +5,9 @@ module.exports = composePlugins(withNx(), (config) => {
 	config = {
 		...config,
 		externalsType: 'commonjs',
+		// output: {
+		// 	filename: '[name].js',
+		// },
 		externalsPresets: { node: true },
 		target: 'node',
 		externals: {
@@ -19,6 +22,13 @@ module.exports = composePlugins(withNx(), (config) => {
 			fastify: 'fastify',
 			'@fastify/multipart': '@fastify/multipart',
 			'@blazity/nest-file-fastify': '@blazity/nest-file-fastify',
+			'@nestjs/platform-fastify': '@nestjs/platform-fastify',
+			'nestjs-pino': 'nestjs-pino',
+			'reflect-metadata': 'reflect-metadata',
+			rxjs: 'rxjs',
+			'class-transformer': 'class-transformer',
+			'pino-pretty': 'pino-pretty',
+			'@fastify/static': '@fastify/static',
 		},
 	};
 	return config;
