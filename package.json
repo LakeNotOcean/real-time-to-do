@@ -3,8 +3,11 @@
 	"version": "0.0.0",
 	"license": "MIT",
 	"scripts": {
-		"MIGRATIONS SCRIPTS": "",
-		"generate-models:dev": "dotenv -e ./env/development.env -- npx prisma generate --schema=./libs/common/src/dbContext/schema.prisma",
+		"DATABASE SCRIPTS": "",
+		"dotenv:dev": "dotenv -e ./env/development.env",
+		"prisma-generate:dev": "npm run dotenv:dev -- npx prisma generate -- --schema=./libs/common/src/dbContext/schema.prisma",
+		"prisma-push:dev": "npm run dotenv:dev -- npx prisma db push -- --schema=./libs/common/src/dbContext/schema.prisma",
+		"API SCRIPTS": "",
 		"server-api:build": "nx build real-time-to-do-api",
 		"server-api:serve": "nx serve real-time-to-do-api"
 	},
