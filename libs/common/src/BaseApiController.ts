@@ -1,9 +1,10 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { FastifyReply } from 'fastify';
-import { JsonLogger } from './customLogger/JsonLogger';
+import { JsonLogger } from './';
 
 export class BaseApiController {
 	private readonly logger = new JsonLogger(BaseApiController.name);
+
 	protected OkEmpty(response: FastifyReply): void {
 		response.statusCode = HttpStatus.OK;
 		response.send();
@@ -11,7 +12,7 @@ export class BaseApiController {
 	protected Ok<T>(response: FastifyReply, body?: T) {
 		response.status(HttpStatus.OK).send(body);
 	}
-	protected Created<T>(response: FastifyReply, body: T) {
+	protected Created<T>(response: FastifyReply, body?: T) {
 		response.statusCode = HttpStatus.CREATED;
 		response.send(body);
 	}

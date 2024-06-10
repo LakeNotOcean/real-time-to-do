@@ -8,7 +8,6 @@ export type getRequestDecOptions = {
 	// eslint-disable-next-line @typescript-eslint/ban-types
 	resultType: string | Function | Type<unknown> | [Function];
 	isResultArray?: boolean;
-	isTransaction?: boolean;
 };
 
 export function GetRequestDec(options: getRequestDecOptions) {

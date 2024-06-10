@@ -1,4 +1,5 @@
 import { configSwagger, toEnvEnum, ValidationException } from '@common';
+import multiPart from '@fastify/multipart';
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory, Reflector } from '@nestjs/core';
@@ -26,12 +27,12 @@ async function bootstrap() {
 			exceptionFactory: (errors) => new ValidationException(errors),
 		}),
 	);
-
 	app.useGlobalInterceptors(
 		new ClassSerializerInterceptor(app.get(Reflector)),
 		new BaseInterceptor(),
 	);
 	app.useLogger(app.get(Logger));
+	app.register(multiPart);
 
 	const env = toEnvEnum(configService.getOrThrow<string>('NODE_ENV'));
 	configSwagger(
