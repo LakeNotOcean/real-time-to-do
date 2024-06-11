@@ -88,7 +88,11 @@ export class GlobalExceptionsFilter implements ExceptionFilter {
 		exception: Exception,
 		argumentsHost: ArgumentsHost,
 	): Observable<unknown> {
-		this.logger.error(exception);
+		this.logger.error({
+			...exception,
+			message: exception['message'],
+			stack: exception['stack'],
+		});
 		const formatter = this.formatters.find((x) => x.match(argumentsHost));
 		const payload =
 			formatter?.format(exception, argumentsHost) ||

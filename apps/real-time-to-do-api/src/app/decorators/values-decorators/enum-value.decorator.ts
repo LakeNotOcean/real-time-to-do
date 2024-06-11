@@ -1,47 +1,40 @@
 import {
+	Result,
 	setValidationErrorConstraint,
+	StatusEnum,
 	TransformWithValidationErrorDec,
 	ValidationException,
 } from '@common';
 import { applyDecorators } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional, ValidateIf } from 'class-validator';
-import {
-	GREATER_THAN_MAX_VALUE,
-	IS_NOT_A_STRING,
-	LESS_THAN_MIN_VALUE,
-} from '../../constants/error.constant';
+import { IS_NOT_A_STRING } from '../../constants/error.constant';
 
-export type bigIntValueDecOptions = {
+export type enumValueDecOptions = {
 	isRequired: boolean;
-	minValue?: bigint;
-	maxValue?: bigint;
+	enumType: Record<string, string>;
+	parseFunc: (val: string) => Result<unknown>;
 };
 
-export function bigIntValueValueDec(opt: bigIntValueDecOptions) {
+export function enumValueDec(opt: enumValueDecOptions) {
 	const decorators = [
-		ApiProperty({
-			required: opt.isRequired,
-			type: 'string',
-			example: '12345',
-			description: 'js bigint value',
-		}),
+		ApiProperty({ required: opt.isRequired, enum: opt.enumType }),
 		opt.isRequired ? IsNotEmpty() : IsOptional(),
 		ValidateIf((_obj, value) => value != null && value != undefined),
 		TransformWithValidationErrorDec((_key, value, error) => {
-			if (typeof value !== 'bigint') {
+			if (typeof value !== 'string') {
 				setValidationErrorConstraint(error, IS_NOT_A_STRING);
 				throw new ValidationException([error]);
 			}
-			if (opt.minValue && value < opt.minValue) {
-				setValidationErrorConstraint(error, LESS_THAN_MIN_VALUE);
+			const parseResult = opt.parseFunc(value);
+			if (parseResult.getStatus() != StatusEnum.Success) {
+				setValidationErrorConstraint(error, {
+					key: 'EnumIsNotValid',
+					message: opt.enumType + ' is not valid',
+				});
 				throw new ValidationException([error]);
 			}
-			if (opt.maxValue && value > opt.maxValue) {
-				setValidationErrorConstraint(error, GREATER_THAN_MAX_VALUE);
-				throw new ValidationException([error]);
-			}
-			return value;
+			return parseResult.unwrap();
 		}),
 	];
 	return applyDecorators(...decorators);

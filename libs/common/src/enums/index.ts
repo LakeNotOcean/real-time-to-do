@@ -1,2 +1,2 @@
 export * from './env.enum';
-export * from './table.enum';
+export * from './task.enum';

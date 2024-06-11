@@ -1,7 +1,8 @@
 import { createEmptyResult, createSuccessResult, Result } from '@common';
 import { Injectable } from '@nestjs/common';
 import { UserDto } from '../dto/user.dto';
-import { PrismaService } from '../services/prisma.service';
+import { NotExistException } from '../exceptions';
+import { PrismaService } from '../prisma-wrapper/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
@@ -32,6 +33,19 @@ export class UsersService {
 		id: bigint,
 		updateUserDto: UpdateUserDto,
 	): Promise<Result<void>> {
+		await this.prismaService.$transaction(async (tx) => {
+			const { id } = await tx.users.findFirst({
+				select: { id: true },
+				where: { id: updateUserDto.id },
+			});
+			if (!id) {
+				throw new NotExistException({ message: 'task does not exist' });
+			}
+			await tx.users.update({
+				where: { id },
+				data: updateUserDto.name ? { name: updateUserDto.name } : {},
+			});
+		});
 		await this.prismaService.users.update({
 			where: { id },
 			data: updateUserDto.name ? { name: updateUserDto.name } : {},

@@ -12,8 +12,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
 		const params: PrismaServiceConfig = {
 			datasources: { db: { url: getDatabaseUrl(configService) } },
 		};
-		super();
-		Object.assign(this, params);
+		super(params);
 	}
 	async onModuleInit() {
 		await this.$connect();

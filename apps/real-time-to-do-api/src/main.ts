@@ -32,7 +32,16 @@ async function bootstrap() {
 		new BaseInterceptor(),
 	);
 	app.useLogger(app.get(Logger));
-	app.register(multiPart);
+	app.register(multiPart, {
+		limits: {
+			fieldNameSize: 100,
+			fieldSize: 1000000,
+			fields: 10,
+			fileSize: 100,
+			files: 1,
+			headerPairs: 2000,
+		},
+	});
 
 	const env = toEnvEnum(configService.getOrThrow<string>('NODE_ENV'));
 	configSwagger(
@@ -45,6 +54,12 @@ async function bootstrap() {
 	const port = configService.getOrThrow<number>('serverPort');
 	const address = configService.getOrThrow<string>('serverAddress');
 	await app.listen(port, address);
+
+	BigInt.prototype['toJSON'] = function () {
+		const int = Number.parseInt(this.toString());
+		return int ?? this.toString();
+	};
+
 	console.log('server run on port ' + port, address);
 }
 

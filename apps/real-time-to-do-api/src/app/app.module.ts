@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common';
 
-import { generalConfig, getPinoLoggerConfig } from '@common';
+import { ExceptionsModule, generalConfig, getPinoLoggerConfig } from '@common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { LoggerModule } from 'nestjs-pino';
-import { UsersController } from './users/users.controller';
-import { UsersService } from './users/users.service';
+import { PrismaModule } from './prisma-wrapper/prisma.module';
+import { PrismaService } from './prisma-wrapper/prisma.service';
+import { TasksModule } from './tasks/tasks.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
 	imports: [
@@ -19,8 +21,11 @@ import { UsersService } from './users/users.service';
 				getPinoLoggerConfig(configService),
 			inject: [ConfigService],
 		}),
+		UsersModule,
+		TasksModule,
+		PrismaModule,
+		ExceptionsModule.forRoot(),
 	],
-	controllers: [UsersController],
-	providers: [UsersService],
+	providers: [PrismaService],
 })
 export class AppModule {}

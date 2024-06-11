@@ -15,4 +15,11 @@ export const IS_NOT_INT: errorConstraintType = {
 	message: 'value is not int',
 };
 
-export const KEY_ADD_LESSONS_VALIDATION_PIPE = 'addLessonsValidationPipe';
+export const GREATER_THAN_MAX_VALUE: errorConstraintType = {
+	key: 'greaterThanMaxValue',
+	message: 'must be less than maximum value',
+};
+export const LESS_THAN_MIN_VALUE: errorConstraintType = {
+	key: 'lessThanMinValue',
+	message: 'must be greater than minimum value',
+};
