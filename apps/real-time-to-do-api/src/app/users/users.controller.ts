@@ -37,13 +37,15 @@ export class UsersController extends BaseApiController {
 		route: 'all',
 		description: 'get user list',
 	})
-	async findAll() {
-		return (await this.usersService.findAll()).unwrap();
+	async findAll(@Res() response: FastifyReply) {
+		const res = (await this.usersService.findAll()).unwrap();
+		this.Ok(response, res);
 	}
 
 	@GetRequestDec({ resultType: UserDto, description: 'get user' })
 	async findOne(@Query('id') { id }: IdQueryReqParam) {
-		return (await this.usersService.findOne(id)).unwrap();
+		const res = await this.usersService.findOne(id);
+		return res.unwrap();
 	}
 
 	@PatchRequestDec({ responseString: 'user name changed successfully' })
@@ -51,11 +53,11 @@ export class UsersController extends BaseApiController {
 		@Query('id') { id }: IdQueryReqParam,
 		@Body() updateUserDto: UpdateUserDto,
 	) {
-		return await this.usersService.update(id, updateUserDto);
+		return (await this.usersService.update(id, updateUserDto)).unwrap();
 	}
 
 	@DeleteRequestDec({ responseString: 'user removed successfully' })
 	async remove(@Query('id') { id }: IdQueryReqParam) {
-		return this.usersService.remove(id);
+		return (await this.usersService.remove(id)).unwrap();
 	}
 }

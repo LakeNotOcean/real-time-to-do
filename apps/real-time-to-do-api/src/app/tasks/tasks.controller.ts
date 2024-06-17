@@ -37,7 +37,7 @@ export class TasksController extends BaseApiController {
 		description: 'get tasks list',
 	})
 	async findAll() {
-		return this.tasksService.findAll();
+		return (await this.tasksService.findAll()).unwrap();
 	}
 
 	@GetRequestDec({
@@ -46,7 +46,7 @@ export class TasksController extends BaseApiController {
 		description: 'get task',
 	})
 	async findOne(@Query('id') { id }: IdQueryReqParam) {
-		return this.tasksService.findOne(id);
+		return (await this.tasksService.findOne(id)).unwrap();
 	}
 
 	@PatchRequestDec({ responseString: 'task name changed successfully' })
@@ -54,11 +54,11 @@ export class TasksController extends BaseApiController {
 		@Query('id') { id }: IdQueryReqParam,
 		@Body() updateTaskDto: UpdateTaskDto,
 	) {
-		return this.tasksService.update(id, updateTaskDto);
+		return (await this.tasksService.update(id, updateTaskDto)).unwrap();
 	}
 
 	@DeleteRequestDec({ responseString: 'task removed successfully' })
 	async remove(@Query('id') { id }: IdQueryReqParam) {
-		return this.tasksService.remove(id);
+		return (await this.tasksService.remove(id)).unwrap();
 	}
 }

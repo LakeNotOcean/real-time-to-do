@@ -21,10 +21,13 @@ export class UsersService {
 		return createSuccessResult(dtoResult);
 	}
 
-	async findOne(id: bigint): Promise<Result<UserDto>> {
+	async findOne(id: bigint): Promise<Result<UserDto | void>> {
 		const user = await this.prismaService.users.findFirst({
 			where: { id },
 		});
+		if (!user) {
+			return createEmptyResult();
+		}
 		const dtoResult = new UserDto({ id: user.id, name: user.name });
 		return createSuccessResult(dtoResult);
 	}

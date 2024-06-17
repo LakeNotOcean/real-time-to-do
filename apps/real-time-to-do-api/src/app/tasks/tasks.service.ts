@@ -1,4 +1,9 @@
-import { createEmptyResult, createSuccessResult, toTaskEnum } from '@common';
+import {
+	createEmptyResult,
+	createSuccessResult,
+	Result,
+	toTaskEnum,
+} from '@common';
 import { Injectable } from '@nestjs/common';
 import { TaskDto } from '../dto/task.dto';
 import { PrismaService } from '../prisma-wrapper/prisma.service';
@@ -29,8 +34,11 @@ export class TasksService {
 		return createSuccessResult(dtoResult);
 	}
 
-	async findOne(id: bigint) {
+	async findOne(id: bigint): Promise<Result<void> | Result<TaskDto>> {
 		const task = await this.prismaService.tasks.findFirst({ where: { id } });
+		if (!task) {
+			return createEmptyResult();
+		}
 		const dtoResult = new TaskDto({
 			id: task.id,
 			title: task.title,

@@ -90,6 +90,10 @@ export class GlobalExceptionsFilter implements ExceptionFilter {
 	): Observable<unknown> {
 		this.logger.error({
 			...exception,
+			inner: {
+				massage: exception['inner']['message'],
+				stack: exception['inner']['stack'],
+			},
 			message: exception['message'],
 			stack: exception['stack'],
 		});
