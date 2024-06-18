@@ -20,7 +20,6 @@ import { DeleteRequestDec } from '../../decorators/methods-decorators/delete-req
 import { GetRequestDec } from '../../decorators/methods-decorators/get-request.decorator';
 import { PostRequestDec } from '../../decorators/methods-decorators/post-request.decorator';
 import { AttachedDto } from '../../dto/attached.dto';
-import { IdQueryReqParam } from '../../queries/id.query';
 import { AttachedService } from './attached.service';
 import { AttachedInfoDto } from './dto/attached-info.dto';
 @Controller()
@@ -36,12 +35,12 @@ export class AttachedController extends BaseApiController {
 		route: 'all',
 		description: 'get attach list for task',
 	})
-	async getAttachList(@Query() { id }: IdQueryReqParam) {
+	async getAttachList(@Query() id: bigint) {
 		(await this.attachedService.getAttachList(id)).unwrap();
 	}
 
 	@GetRequestDec({ resultType: AttachedDto, description: 'get attach by id' })
-	async getAttached(@Query() { id }: IdQueryReqParam) {
+	async getAttached(@Query() id: bigint) {
 		(await this.attachedService.getAttached(id)).unwrap();
 	}
 
@@ -52,7 +51,7 @@ export class AttachedController extends BaseApiController {
 	@UseInterceptors(FileInterceptor('file'))
 	@AttachFileDescriptionDec('20mb jpeg file')
 	async attach(
-		@Query() { id }: IdQueryReqParam,
+		@Query() id: bigint,
 		@Res() response: FastifyReply,
 		@UploadedFile(
 			new ParseFilePipe({
@@ -68,7 +67,7 @@ export class AttachedController extends BaseApiController {
 		return this.Created(response);
 	}
 	@DeleteRequestDec({ responseString: 'file removed successfully' })
-	async removeAttached(@Query() { id }: IdQueryReqParam) {
+	async removeAttached(@Query() id: bigint) {
 		await this.attachedService.removeAttached(id);
 	}
 }

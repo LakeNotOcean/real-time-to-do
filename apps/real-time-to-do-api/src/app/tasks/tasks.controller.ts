@@ -1,13 +1,13 @@
 import { BaseApiController } from '@common';
-import { Body, Controller, Query, Res } from '@nestjs/common';
+import { Body, Controller, Res } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { FastifyReply } from 'fastify';
+import { IdQueryDec } from '../decorators/id-query.decorator';
 import { DeleteRequestDec } from '../decorators/methods-decorators/delete-request.decorator';
 import { GetRequestDec } from '../decorators/methods-decorators/get-request.decorator';
 import { PatchRequestDec } from '../decorators/methods-decorators/patch-request.decorator';
 import { PostRequestDec } from '../decorators/methods-decorators/post-request.decorator';
 import { TaskDto } from '../dto/task.dto';
-import { IdQueryReqParam } from '../queries/id.query';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { TasksService } from './tasks.service';
@@ -45,20 +45,17 @@ export class TasksController extends BaseApiController {
 		isResultArray: true,
 		description: 'get task',
 	})
-	async findOne(@Query('id') { id }: IdQueryReqParam) {
+	async findOne(@IdQueryDec() id: bigint) {
 		return (await this.tasksService.findOne(id)).unwrap();
 	}
 
 	@PatchRequestDec({ responseString: 'task name changed successfully' })
-	async update(
-		@Query('id') { id }: IdQueryReqParam,
-		@Body() updateTaskDto: UpdateTaskDto,
-	) {
+	async update(@IdQueryDec() id: bigint, @Body() updateTaskDto: UpdateTaskDto) {
 		return (await this.tasksService.update(id, updateTaskDto)).unwrap();
 	}
 
 	@DeleteRequestDec({ responseString: 'task removed successfully' })
-	async remove(@Query('id') { id }: IdQueryReqParam) {
+	async remove(@IdQueryDec() id: bigint) {
 		return (await this.tasksService.remove(id)).unwrap();
 	}
 }

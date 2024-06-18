@@ -1,13 +1,8 @@
-import { Module, ValidationPipe } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 
-import {
-	ExceptionsModule,
-	generalConfig,
-	getPinoLoggerConfig,
-	ValidationException,
-} from '@common';
+import { ExceptionsModule, generalConfig, getPinoLoggerConfig } from '@common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { APP_PIPE, RouterModule } from '@nestjs/core';
+import { RouterModule } from '@nestjs/core';
 import { LoggerModule } from 'nestjs-pino';
 import { PrismaModule } from './prisma-wrapper/prisma.module';
 import { PrismaService } from './prisma-wrapper/prisma.service';
@@ -41,16 +36,6 @@ import { UsersModule } from './users/users.module';
 			},
 		]),
 	],
-	providers: [
-		PrismaService,
-		{
-			provide: APP_PIPE,
-			useValue: new ValidationPipe({
-				disableErrorMessages: false,
-				transform: true,
-				exceptionFactory: (errors) => new ValidationException(errors),
-			}),
-		},
-	],
+	providers: [PrismaService],
 })
 export class AppModule {}

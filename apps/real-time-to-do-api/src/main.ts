@@ -1,6 +1,6 @@
-import { configSwagger, toEnvEnum } from '@common';
-import multiPart from '@fastify/multipart';
-import { ClassSerializerInterceptor } from '@nestjs/common';
+import { configSwagger, toEnvEnum, ValidationException } from '@common';
+import fastifyMultipart from '@fastify/multipart';
+import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory, Reflector } from '@nestjs/core';
 import {
@@ -24,8 +24,21 @@ async function bootstrap() {
 		new ClassSerializerInterceptor(app.get(Reflector)),
 		new BaseInterceptor(),
 	);
+	app.useGlobalPipes(
+		new ValidationPipe({
+			disableErrorMessages: false,
+			transform: true,
+			whitelist: true,
+			transformOptions: { enableImplicitConversion: true },
+			exceptionFactory: (errors) => new ValidationException(errors),
+		}),
+	);
 	app.useLogger(app.get(Logger));
-	app.register(multiPart, {
+
+	// проблема с типизацией fastify, multipart должен регистрироваться
+	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+	// @ts-ignore
+	app.register(fastifyMultipart, {
 		limits: {
 			fieldNameSize: 100,
 			fieldSize: 1000000,

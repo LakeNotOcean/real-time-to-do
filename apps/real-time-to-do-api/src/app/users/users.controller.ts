@@ -1,13 +1,13 @@
 import { BaseApiController } from '@common';
-import { Body, Controller, Query, Res } from '@nestjs/common';
+import { Body, Controller, Res } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { FastifyReply } from 'fastify';
+import { IdQueryDec } from '../decorators/id-query.decorator';
 import { DeleteRequestDec } from '../decorators/methods-decorators/delete-request.decorator';
 import { GetRequestDec } from '../decorators/methods-decorators/get-request.decorator';
 import { PatchRequestDec } from '../decorators/methods-decorators/patch-request.decorator';
 import { PostRequestDec } from '../decorators/methods-decorators/post-request.decorator';
 import { UserDto } from '../dto/user.dto';
-import { IdQueryReqParam } from '../queries/id.query';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
@@ -42,20 +42,20 @@ export class UsersController extends BaseApiController {
 	}
 
 	@GetRequestDec({ resultType: UserDto, description: 'get user' })
-	async findOne(@Query('id') { id }: IdQueryReqParam) {
+	async findOne(
+		@IdQueryDec()
+		id: bigint,
+	) {
 		return (await this.usersService.findOne(id)).unwrap();
 	}
 
 	@PatchRequestDec({ responseString: 'user name changed successfully' })
-	async update(
-		@Query('id') { id }: IdQueryReqParam,
-		@Body() updateUserDto: UpdateUserDto,
-	) {
+	async update(@IdQueryDec() id: bigint, @Body() updateUserDto: UpdateUserDto) {
 		return (await this.usersService.update(id, updateUserDto)).unwrap();
 	}
 
 	@DeleteRequestDec({ responseString: 'user removed successfully' })
-	async remove(@Query('id') { id }: IdQueryReqParam) {
+	async remove(@IdQueryDec() id: bigint) {
 		return (await this.usersService.remove(id)).unwrap();
 	}
 }

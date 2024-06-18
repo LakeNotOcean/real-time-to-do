@@ -1,4 +1,5 @@
 import {
+	isNullOrUndefined,
 	Result,
 	setValidationErrorConstraint,
 	StatusEnum,
@@ -20,7 +21,7 @@ export function enumValueDec(opt: enumValueDecOptions) {
 	const decorators = [
 		ApiProperty({ required: opt.isRequired, enum: opt.enumType }),
 		opt.isRequired ? IsNotEmpty() : IsOptional(),
-		ValidateIf((_obj, value) => value != null && value != undefined),
+		ValidateIf((_obj, value) => !(!opt.isRequired && isNullOrUndefined(value))),
 		TransformWithValidationErrorDec((_key, value, error) => {
 			if (typeof value !== 'string') {
 				setValidationErrorConstraint(error, IS_NOT_A_STRING);

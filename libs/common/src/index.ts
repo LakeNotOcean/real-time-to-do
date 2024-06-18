@@ -1,5 +1,6 @@
 export * from './array-utils';
 export * from './BaseApiController';
+export * from './compare-utils';
 export * from './configs';
 export * from './constants/constants';
 export * from './dbContext';

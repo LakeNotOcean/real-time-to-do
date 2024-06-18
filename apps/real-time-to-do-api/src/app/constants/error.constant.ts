@@ -10,7 +10,7 @@ export const IS_NOT_AN_ARRAY: errorConstraintType = {
 	message: 'property must be a valid array',
 };
 
-export const IS_NOT_INT: errorConstraintType = {
+export const IS_NOT_AN_INT: errorConstraintType = {
 	key: 'valueIsNotAnInt',
 	message: 'value is not int',
 };

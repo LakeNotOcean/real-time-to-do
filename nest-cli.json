@@ -6,6 +6,7 @@
 	"sourceRoot": "apps/real-time-to-do-api/src",
 	"compilerOptions": {
 		"webpack": true,
+		"typeCheck": true,
 		"tsConfigPath": "apps/real-time-to-do-api/tsconfig.app.json"
 	},
 	"projects": {

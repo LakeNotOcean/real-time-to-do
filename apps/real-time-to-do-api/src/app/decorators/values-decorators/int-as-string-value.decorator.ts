@@ -1,3 +1,4 @@
+import { isNullOrUndefined } from '@common';
 import { applyDecorators } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
 import {
@@ -24,7 +25,7 @@ export function intAsStringValueDec(opt: intAsStringValueDecOptions) {
 			description: '12345',
 		}),
 		opt.isRequired ? IsNotEmpty() : IsOptional(),
-		ValidateIf((_obj, value) => value != null && value != undefined),
+		ValidateIf((_obj, value) => !(!opt.isRequired && isNullOrUndefined(value))),
 		IsString(),
 		IsInt(),
 	];
