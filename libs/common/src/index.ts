@@ -9,7 +9,6 @@ export * from './exceptions';
 export * from './loggers';
 export * from './map-utils';
 export * from './parse-utils';
-export * from './random-utils';
 export * from './result';
 export * from './time-utils';
 export * from './utils';

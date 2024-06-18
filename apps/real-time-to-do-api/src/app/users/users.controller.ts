@@ -37,15 +37,13 @@ export class UsersController extends BaseApiController {
 		route: 'all',
 		description: 'get user list',
 	})
-	async findAll(@Res() response: FastifyReply) {
-		const res = (await this.usersService.findAll()).unwrap();
-		this.Ok(response, res);
+	async findAll() {
+		return (await this.usersService.findAll()).unwrap();
 	}
 
 	@GetRequestDec({ resultType: UserDto, description: 'get user' })
 	async findOne(@Query('id') { id }: IdQueryReqParam) {
-		const res = await this.usersService.findOne(id);
-		return res.unwrap();
+		return (await this.usersService.findOne(id)).unwrap();
 	}
 
 	@PatchRequestDec({ responseString: 'user name changed successfully' })

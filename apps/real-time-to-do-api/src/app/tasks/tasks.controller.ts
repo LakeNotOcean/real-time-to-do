@@ -12,7 +12,7 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { TasksService } from './tasks.service';
 
-@Controller('tasks')
+@Controller()
 @ApiTags('tasks')
 export class TasksController extends BaseApiController {
 	constructor(private readonly tasksService: TasksService) {

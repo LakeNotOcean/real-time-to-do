@@ -91,8 +91,8 @@ export class GlobalExceptionsFilter implements ExceptionFilter {
 		this.logger.error({
 			...exception,
 			inner: {
-				massage: exception['inner']['message'],
-				stack: exception['inner']['stack'],
+				massage: exception['inner'] ? exception['inner']['message'] : '',
+				stack: exception['inner'] ? exception['inner']['stack'] : '',
 			},
 			message: exception['message'],
 			stack: exception['stack'],

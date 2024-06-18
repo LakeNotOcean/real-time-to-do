@@ -23,12 +23,15 @@ export class Result<T> {
 		if (this.status != StatusEnum.Success) {
 			throw new Error(this.errorMessage);
 		}
+		if (this.resultData == undefined) {
+			throw new Error('result value is undefined');
+		}
 		return this.resultData;
 	}
 	getStatus(): StatusEnum {
 		return this.status;
 	}
-	getErrorMessage(): string {
+	getErrorMessage(): string | undefined {
 		return this.errorMessage;
 	}
 }

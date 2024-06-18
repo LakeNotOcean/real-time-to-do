@@ -1,22 +1,25 @@
 {
-	"compileOnSave": false,
 	"compilerOptions": {
-		"rootDir": ".",
-		"sourceMap": true,
-		"declaration": false,
-		"moduleResolution": "node",
+		"module": "NodeNext",
+		"declaration": true,
+		"removeComments": true,
 		"emitDecoratorMetadata": true,
 		"experimentalDecorators": true,
-		"importHelpers": true,
-		"target": "esnext",
-		"module": "esnext",
-		"lib": ["ES2023"],
-		"skipLibCheck": true,
-		"skipDefaultLibCheck": true,
+		"allowSyntheticDefaultImports": true,
+		"target": "ESNext",
+		"sourceMap": true,
 		"baseUrl": ".",
+		"rootDir": ".",
+		"incremental": true,
+		"skipLibCheck": true,
+		"strictNullChecks": true,
+		"noImplicitAny": false,
+		"strictBindCallApply": false,
+		"resolveJsonModule": true,
+		"forceConsistentCasingInFileNames": false,
+		"noFallthroughCasesInSwitch": false,
 		"paths": {
 			"@common": ["./libs/common/src"]
 		}
-	},
-	"exclude": ["node_modules", "tmp"]
+	}
 }
