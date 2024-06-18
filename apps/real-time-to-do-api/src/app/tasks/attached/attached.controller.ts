@@ -5,6 +5,7 @@ import {
 } from '@blazity/nest-file-fastify';
 import { BaseApiController } from '@common';
 import {
+	Controller,
 	FileTypeValidator,
 	MaxFileSizeValidator,
 	ParseFilePipe,
@@ -22,7 +23,7 @@ import { AttachedDto } from '../../dto/attached.dto';
 import { IdQueryReqParam } from '../../queries/id.query';
 import { AttachedService } from './attached.service';
 import { AttachedInfoDto } from './dto/attached-info.dto';
-
+@Controller()
 @ApiTags('tasks')
 export class AttachedController extends BaseApiController {
 	constructor(private readonly attachedService: AttachedService) {
