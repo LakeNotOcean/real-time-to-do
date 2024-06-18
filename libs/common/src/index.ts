@@ -11,4 +11,5 @@ export * from './map-utils';
 export * from './parse-utils';
 export * from './result';
 export * from './time-utils';
+export * from './types';
 export * from './utils';

@@ -1,4 +1,4 @@
-import { TaskEnum, toTaskEnum } from '@common';
+import { NullablePartial, TaskEnum, toTaskEnum } from '@common';
 import { PickType } from '@nestjs/swagger';
 import { bigIntValueValueDec } from '../decorators/values-decorators/bigint-value.decorator';
 import { enumValueDec } from '../decorators/values-decorators/enum-value.decorator';
@@ -6,7 +6,10 @@ import { stringValueDec } from '../decorators/values-decorators/string-value.dec
 import { IdDto } from './id.dto';
 
 export class TaskDto extends PickType(IdDto, ['id'] as const) {
-	constructor(args: Required<TaskDto>) {
+	constructor(
+		args: Required<Pick<TaskDto, 'id' | 'userId' | 'status' | 'title'>> &
+			NullablePartial<Pick<TaskDto, 'description'>>,
+	) {
 		super();
 		Object.assign(this, args);
 	}
@@ -14,8 +17,8 @@ export class TaskDto extends PickType(IdDto, ['id'] as const) {
 	userId: bigint;
 	@stringValueDec({ isRequired: true })
 	title: string;
-	@stringValueDec({ isRequired: true })
-	description: string;
+	@stringValueDec({ isRequired: false })
+	description?: string;
 
 	@enumValueDec({
 		isRequired: true,

@@ -43,6 +43,9 @@ export class AttachedService {
 		const attached = await this.prismaService.attached.findFirst({
 			where: { id: attachedId },
 		});
+		if (!attached) {
+			throw new NotExistException({ message: 'attached does not exist' });
+		}
 		const file = createReadStream(
 			getPathToAttached(this.pathToStorage, attached.id),
 		);
@@ -61,8 +64,8 @@ export class AttachedService {
 				select: { id: true },
 				where: { id: taskId },
 			});
-			if (!foundTask.id) {
-				throw new NotExistException({ message: 'task not found' });
+			if (!foundTask) {
+				throw new NotExistException({ message: 'task does not exist' });
 			}
 			const { id } = await tx.attached.create({
 				data: { name: file.fieldname },
@@ -86,8 +89,8 @@ export class AttachedService {
 				select: { id: true },
 				where: { id: attachedId },
 			});
-			if (!foundAttached.id) {
-				throw new NotExistException({ message: 'attached not found' });
+			if (!foundAttached) {
+				throw new NotExistException({ message: 'attached does not exist' });
 			}
 			await rm(getPathToAttached(this.pathToStorage, foundAttached.id), {
 				force: true,

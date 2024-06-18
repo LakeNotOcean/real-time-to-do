@@ -21,12 +21,12 @@ export class UsersService {
 		return createSuccessResult(dtoResult);
 	}
 
-	async findOne(id: bigint): Promise<Result<UserDto | void>> {
+	async findOne(id: bigint): Promise<Result<UserDto>> {
 		const user = await this.prismaService.users.findFirst({
 			where: { id },
 		});
 		if (!user) {
-			return createEmptyResult();
+			throw new NotExistException({ message: 'user does not exist' });
 		}
 		const dtoResult = new UserDto({ id: user.id, name: user.name });
 		return createSuccessResult(dtoResult);
@@ -37,13 +37,14 @@ export class UsersService {
 		updateUserDto: UpdateUserDto,
 	): Promise<Result<void>> {
 		await this.prismaService.$transaction(async (tx) => {
-			const { id } = await tx.users.findFirst({
+			const result = await tx.users.findFirst({
 				select: { id: true },
 				where: { id: updateUserDto.id },
 			});
-			if (!id) {
+			if (!result) {
 				throw new NotExistException({ message: 'task does not exist' });
 			}
+			const id = result.id;
 			await tx.users.update({
 				where: { id },
 				data: updateUserDto.name ? { name: updateUserDto.name } : {},

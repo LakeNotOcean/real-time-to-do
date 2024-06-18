@@ -6,6 +6,7 @@ import {
 } from '@common';
 import { Injectable } from '@nestjs/common';
 import { TaskDto } from '../dto/task.dto';
+import { NotExistException } from '../exceptions';
 import { PrismaService } from '../prisma-wrapper/prisma.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
@@ -37,7 +38,7 @@ export class TasksService {
 	async findOne(id: bigint): Promise<Result<void> | Result<TaskDto>> {
 		const task = await this.prismaService.tasks.findFirst({ where: { id } });
 		if (!task) {
-			return createEmptyResult();
+			throw new NotExistException({ message: 'task does not exist' });
 		}
 		const dtoResult = new TaskDto({
 			id: task.id,
