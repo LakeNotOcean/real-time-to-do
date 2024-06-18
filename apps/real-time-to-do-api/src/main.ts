@@ -1,6 +1,6 @@
-import { configSwagger, toEnvEnum, ValidationException } from '@common';
+import { configSwagger, toEnvEnum } from '@common';
 import multiPart from '@fastify/multipart';
-import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
+import { ClassSerializerInterceptor } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory, Reflector } from '@nestjs/core';
 import {
@@ -20,13 +20,6 @@ async function bootstrap() {
 
 	const configService = app.get(ConfigService);
 
-	app.useGlobalPipes(
-		new ValidationPipe({
-			disableErrorMessages: false,
-			transform: true,
-			exceptionFactory: (errors) => new ValidationException(errors),
-		}),
-	);
 	app.useGlobalInterceptors(
 		new ClassSerializerInterceptor(app.get(Reflector)),
 		new BaseInterceptor(),
