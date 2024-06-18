@@ -4,7 +4,7 @@
 	"license": "MIT",
 	"scripts": {
 		"DATABASE SCRIPTS": "",
-		"dotenv:dev": "dotenv -e ./env/development.env",
+		"dotenv:dev": "dotenv -e ./env/dev.env",
 		"prisma-generate:dev": "npm run dotenv:dev -- npx prisma generate -- --schema=./libs/common/src/dbContext/schema.prisma",
 		"prisma-push:dev": "npm run dotenv:dev -- npx prisma db push -- --schema=./libs/common/src/dbContext/schema.prisma",
 		"API SCRIPTS": "",

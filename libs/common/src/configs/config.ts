@@ -14,7 +14,6 @@ export const generalConfig = () => {
 	const result = config({
 		path: path,
 	});
-	console.log('env: ', env);
 	result.parsed ??= {};
 	result.parsed['env'] = env;
 	return result;
