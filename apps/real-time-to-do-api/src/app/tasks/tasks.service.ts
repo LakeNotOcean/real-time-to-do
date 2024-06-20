@@ -5,11 +5,13 @@ import {
 	toTaskEnum,
 } from '@common';
 import { Injectable } from '@nestjs/common';
+import { TASK_NOT_EXISTS } from '../constants/not-exist-error-messages.constant';
 import { TaskDto } from '../dto/task.dto';
 import { NotExistException } from '../exceptions';
 import { PrismaService } from '../prisma-wrapper/prisma.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { checkTaskExists } from './utils';
 
 @Injectable()
 export class TasksService {
@@ -35,10 +37,10 @@ export class TasksService {
 		return createSuccessResult(dtoResult);
 	}
 
-	async findOne(id: bigint): Promise<Result<void> | Result<TaskDto>> {
+	async findOne(id: bigint): Promise<Result<null> | Result<TaskDto>> {
 		const task = await this.prismaService.tasks.findFirst({ where: { id } });
 		if (!task) {
-			throw new NotExistException({ message: 'task does not exist' });
+			throw new NotExistException({ message: TASK_NOT_EXISTS });
 		}
 		const dtoResult = new TaskDto({
 			id: task.id,
@@ -51,21 +53,27 @@ export class TasksService {
 	}
 
 	async update(id: bigint, updateTaskDto: UpdateTaskDto) {
-		await this.prismaService.users.update({
-			where: { id },
-			data: {
-				...(updateTaskDto.description
-					? { description: updateTaskDto.description }
-					: {}),
-				...(updateTaskDto.status ? { status: updateTaskDto.status } : {}),
-				...(updateTaskDto.title ? { title: updateTaskDto.title } : {}),
-			},
+		await this.prismaService.$transaction(async (tx) => {
+			await checkTaskExists(tx.tasks, id);
+			await tx.tasks.update({
+				where: { id },
+				data: {
+					...(updateTaskDto.description
+						? { description: updateTaskDto.description }
+						: {}),
+					...(updateTaskDto.status ? { status: updateTaskDto.status } : {}),
+					...(updateTaskDto.title ? { title: updateTaskDto.title } : {}),
+				},
+			});
 		});
 		return createEmptyResult();
 	}
 
 	async remove(id: bigint) {
-		await this.prismaService.tasks.delete({ where: { id } });
+		await this.prismaService.$transaction(async (tx) => {
+			await checkTaskExists(tx.tasks, id);
+			await tx.tasks.delete({ where: { id } });
+		});
 		return createEmptyResult();
 	}
 }

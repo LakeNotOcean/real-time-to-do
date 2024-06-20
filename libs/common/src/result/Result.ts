@@ -36,8 +36,8 @@ export class Result<T> {
 	}
 }
 
-export function createEmptyResult(): Result<void> {
-	return new Result({ status: StatusEnum.Success });
+export function createEmptyResult(): Result<null> {
+	return new Result({ status: StatusEnum.Success, resultData: null });
 }
 
 export function createSuccessResult<T>(resultData: T): Result<T> {

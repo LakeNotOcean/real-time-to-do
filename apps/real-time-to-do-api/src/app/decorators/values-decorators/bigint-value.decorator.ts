@@ -17,7 +17,7 @@ import {
 	IS_NOT_A_STRING,
 	IS_NOT_AN_INT,
 	LESS_THAN_MIN_VALUE,
-} from '../../constants/error.constant';
+} from '../../constants/validation-error.constant';
 
 export type bigIntValueDecOptions = {
 	isRequired: boolean;
@@ -47,6 +47,9 @@ export function parseBigInt(
 	opt: bigIntValueDecOptions,
 	error: ValidationError,
 ) {
+	if (typeof value == 'bigint') {
+		return value;
+	}
 	if (typeof value !== 'string') {
 		setValidationErrorConstraint(error, IS_NOT_A_STRING);
 		throw new ValidationException([error]);

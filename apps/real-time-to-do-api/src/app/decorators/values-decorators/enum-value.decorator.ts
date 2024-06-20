@@ -9,7 +9,7 @@ import {
 import { applyDecorators } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional, ValidateIf } from 'class-validator';
-import { IS_NOT_A_STRING } from '../../constants/error.constant';
+import { IS_NOT_A_STRING } from '../../constants/validation-error.constant';
 
 export type enumValueDecOptions = {
 	isRequired: boolean;

@@ -5,12 +5,15 @@ import { ConfigService } from '@nestjs/config';
 import { createReadStream, createWriteStream, existsSync, mkdirSync } from 'fs';
 import { rm } from 'fs/promises';
 import { join } from 'path';
+import { ATTACHED_NOT_EXISTS } from '../../constants/not-exist-error-messages.constant';
 import { STORAGE_DIR_NAME } from '../../constants/path.constant';
 import { AttachedDto } from '../../dto/attached.dto';
 import { NotExistException } from '../../exceptions';
 import { PrismaService } from '../../prisma-wrapper/prisma.service';
 import { getPathToAttached } from '../../utils/path.utils';
+import { checkTaskExists } from '../utils';
 import { AttachedInfoDto } from './dto/attached-info.dto';
+import { checkAttachedExists } from './utils';
 
 @Injectable()
 export class AttachedService {
@@ -29,7 +32,7 @@ export class AttachedService {
 		}
 	}
 
-	async getAttachList(taskId: bigint): Promise<Result<AttachedInfoDto[]>> {
+	async getAttachInfoList(taskId: bigint): Promise<Result<AttachedInfoDto[]>> {
 		const attached = await this.prismaService.attached.findMany({
 			where: { task_id: taskId },
 		});
@@ -44,7 +47,7 @@ export class AttachedService {
 			where: { id: attachedId },
 		});
 		if (!attached) {
-			throw new NotExistException({ message: 'attached does not exist' });
+			throw new NotExistException({ message: ATTACHED_NOT_EXISTS });
 		}
 		const file = createReadStream(
 			getPathToAttached(this.pathToStorage, attached.id),
@@ -58,17 +61,12 @@ export class AttachedService {
 		return createSuccessResult(resultDto);
 	}
 
-	async attach(taskId: bigint, file: MemoryStorageFile): Promise<Result<void>> {
+	async attach(taskId: bigint, file: MemoryStorageFile): Promise<Result<null>> {
 		await this.prismaService.$transaction(async (tx) => {
-			const foundTask = await tx.tasks.findFirst({
-				select: { id: true },
-				where: { id: taskId },
-			});
-			if (!foundTask) {
-				throw new NotExistException({ message: 'task does not exist' });
-			}
+			await checkTaskExists(tx.tasks, taskId);
+
 			const { id } = await tx.attached.create({
-				data: { name: file.fieldname },
+				data: { name: file.fieldname, task_id: taskId },
 			});
 
 			await new Promise<void>(function (resolve, reject) {
@@ -83,19 +81,13 @@ export class AttachedService {
 		return createEmptyResult();
 	}
 
-	async removeAttached(attachedId: bigint): Promise<Result<void>> {
+	async removeAttached(attachedId: bigint): Promise<Result<null>> {
 		await this.prismaService.$transaction(async (tx) => {
-			const foundAttached = await tx.attached.findFirst({
-				select: { id: true },
-				where: { id: attachedId },
-			});
-			if (!foundAttached) {
-				throw new NotExistException({ message: 'attached does not exist' });
-			}
-			await rm(getPathToAttached(this.pathToStorage, foundAttached.id), {
+			await checkAttachedExists(tx.attached, attachedId);
+			await rm(getPathToAttached(this.pathToStorage, attachedId), {
 				force: true,
 			});
-			await tx.attached.delete({ where: { id: foundAttached.id } });
+			await tx.attached.delete({ where: { id: attachedId } });
 		});
 		return createEmptyResult();
 	}
