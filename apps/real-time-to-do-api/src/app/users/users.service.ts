@@ -49,7 +49,7 @@ export class UsersService {
 	}
 
 	async remove(id: bigint): Promise<Result<null>> {
-		this.prismaService.$transaction(async (tx) => {
+		await this.prismaService.$transaction(async (tx) => {
 			await checkUserExists(tx.users, id);
 			await tx.users.delete({ where: { id } });
 		});

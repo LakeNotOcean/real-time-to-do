@@ -7,20 +7,15 @@ export async function removeAttachedListFromFilesystem(
 	attachedList: AttachedEntity[],
 ) {
 	for await (const attached of attachedList) {
-		await removeAttachedFromFilesystem(
-			pathToStorage,
-			attached.file_hash,
-			attached.file_type,
-		);
+		await removeAttachedFromFilesystem(pathToStorage, attached.file_hash);
 	}
 }
 
 export async function removeAttachedFromFilesystem(
 	pathToStorage: string,
 	fileHash: string,
-	fileType: string,
 ) {
-	await rm(getPathToAttached(pathToStorage, fileHash, fileType), {
+	await rm(getPathToAttached(pathToStorage, fileHash), {
 		force: true,
 	});
 }

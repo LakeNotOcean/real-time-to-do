@@ -1,11 +1,11 @@
+import { AttachedEntity } from '../../../entities/Attached.entity';
 import { PrismaService } from '../../../prisma-wrapper/prisma.service';
 import { checkTaskExists } from '../../utils';
-import { AttachedInfoDto } from '../dto/attached-info.dto';
 
 export async function getAttachInfoList(
 	prismaService: PrismaService,
 	taskId: bigint,
-): Promise<AttachedInfoDto[]> {
+): Promise<AttachedEntity[]> {
 	const attached = await prismaService.$transaction(async (tx) => {
 		await checkTaskExists(tx.tasks, taskId);
 
@@ -14,8 +14,5 @@ export async function getAttachInfoList(
 		});
 		return attached;
 	});
-	return attached.map(
-		(a) =>
-			new AttachedInfoDto({ id: a.id, name: a.file_name, taskId: a.task_id }),
-	);
+	return attached;
 }

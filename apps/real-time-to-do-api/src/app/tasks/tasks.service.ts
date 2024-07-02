@@ -81,7 +81,7 @@ export class TasksService {
 	}
 
 	async remove(id: bigint) {
-		this.prismaService.$transaction(async (tx) => {
+		await this.prismaService.$transaction(async (tx) => {
 			await checkTaskExists(tx.tasks, id);
 			await tx.tasks.delete({ where: { id } });
 		});

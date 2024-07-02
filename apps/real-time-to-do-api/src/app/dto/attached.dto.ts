@@ -16,5 +16,5 @@ export class AttachedDto extends PickType(IdDto, ['id']) {
 	taskId: bigint;
 
 	@AttachFileDescriptionDec()
-	file: StreamableFile;
+	fileStream: StreamableFile;
 }

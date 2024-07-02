@@ -1,4 +1,4 @@
-import { BaseApiController, toBytes } from '@common';
+import { BaseApiController, MaxFilenameValidator, toBytes } from '@common';
 import { File, FileInterceptor } from '@nest-lab/fastify-multer';
 import {
 	Controller,
@@ -35,16 +35,15 @@ export class AttachedController extends BaseApiController {
 		apiQueryOptions: [taskIdApiQueryOpt],
 	})
 	async getAttachList(@IdQueryDec() id: bigint) {
-		(await this.attachedService.getAttachInfoList(id)).unwrap();
+		return (await this.attachedService.getAttachInfoList(id)).unwrap();
 	}
 
 	@GetRequestDec({
 		resultType: AttachedDto,
 		description: 'get attach by id',
-		apiQueryOptions: [taskIdApiQueryOpt],
 	})
 	async getAttached(@IdQueryDec() id: bigint) {
-		(await this.attachedService.getAttached(id)).unwrap();
+		return (await this.attachedService.getAttached(id)).unwrap();
 	}
 
 	@PostRequestDec({
@@ -65,13 +64,16 @@ export class AttachedController extends BaseApiController {
 						message: 'the file must not be empty and no larger than 20mb',
 					}),
 					new FileTypeValidator({ fileType: 'image/jpeg' }),
+					new MaxFilenameValidator({
+						maxFilenameLength: 30,
+					}),
 				],
 			}),
 		)
 		file: File,
 	) {
-		await this.attachedService.attach(id, file);
-		return this.Created(response);
+		const attachedId = await this.attachedService.attach(id, file);
+		return this.Created(response, attachedId.unwrap());
 	}
 	@DeleteRequestDec({ responseString: 'file removed successfully' })
 	async removeAttached(@IdQueryDec() id: bigint) {

@@ -16,9 +16,5 @@ export async function removeAttached(
 		return attached!;
 	});
 
-	await removeAttachedFromFilesystem(
-		pathToStorage,
-		attached.file_hash,
-		attached.file_type,
-	);
+	await removeAttachedFromFilesystem(pathToStorage, attached.file_hash);
 }

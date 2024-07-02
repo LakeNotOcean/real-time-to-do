@@ -39,14 +39,14 @@ async function bootstrap() {
 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 	// @ts-ignore
 	app.register(fastifyMultipart, {
-		limits: {
-			fieldNameSize: 100,
-			fieldSize: 1000000,
-			fields: 10,
-			fileSize: 100,
-			files: 1,
-			headerPairs: 2000,
-		},
+		// limits: {
+		// 	fieldNameSize: 100,
+		// 	fieldSize: 1_000_000,
+		// 	fields: 10,
+		// 	fileSize: 100,
+		// 	files: 1,
+		// 	headerPairs: 2000,
+		// },
 	});
 
 	const env = toEnvEnum(configService.getOrThrow<string>('NODE_ENV'));

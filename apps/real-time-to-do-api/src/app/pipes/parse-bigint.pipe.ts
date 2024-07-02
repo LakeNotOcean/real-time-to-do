@@ -9,6 +9,8 @@ import {
 export class ParseBigIntPipe implements PipeTransform {
 	constructor(private readonly opt: bigIntValueDecOptions) {}
 	transform(value: unknown, _metadata: ArgumentMetadata) {
-		return parseBigInt(value, this.opt, new ValidationError());
+		const validationError = new ValidationError();
+		validationError.property = _metadata.data || _metadata.type;
+		return parseBigInt(value, this.opt, validationError);
 	}
 }
