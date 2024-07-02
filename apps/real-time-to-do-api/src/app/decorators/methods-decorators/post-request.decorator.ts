@@ -1,5 +1,5 @@
 import { Post, applyDecorators } from '@nestjs/common';
-import { ApiOperation } from '@nestjs/swagger';
+import { ApiOperation, ApiQuery, ApiQueryOptions } from '@nestjs/swagger';
 import {
 	InsertDataValueDec,
 	InsertDataValueDecoratorArgs,
@@ -11,12 +11,19 @@ export type postRequestDecOptions = {
 	responseString: string;
 	responseArgs?: InsertDataValueDecoratorArgs;
 	isResultArray?: boolean;
+	apiQueryOptions?: ApiQueryOptions[];
 };
 
 export function PostRequestDec(options: postRequestDecOptions) {
-	return applyDecorators(
+	const decorators = [
 		Post(options.route),
 		ApiOperation({ description: options.description ?? '' }),
 		InsertDataValueDec(options.responseString, options.responseArgs),
-	);
+	];
+	const apiQueries = options.apiQueryOptions?.map((opt) => ApiQuery(opt));
+	if (apiQueries) {
+		decorators.push(...apiQueries);
+	}
+
+	return applyDecorators(...decorators);
 }

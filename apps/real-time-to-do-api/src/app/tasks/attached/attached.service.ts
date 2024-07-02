@@ -2,8 +2,8 @@ import { MemoryStorageFile } from '@blazity/nest-file-fastify';
 import { createEmptyResult, createSuccessResult, Result } from '@common';
 import { Injectable, StreamableFile } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { createHash } from 'crypto';
 import { createReadStream, createWriteStream, existsSync, mkdirSync } from 'fs';
-import { rm } from 'fs/promises';
 import { join } from 'path';
 import { ATTACHED_NOT_EXISTS } from '../../constants/not-exist-error-messages.constant';
 import { STORAGE_DIR_NAME } from '../../constants/path.constant';
@@ -12,8 +12,9 @@ import { NotExistException } from '../../exceptions';
 import { PrismaService } from '../../prisma-wrapper/prisma.service';
 import { getPathToAttached } from '../../utils/path.utils';
 import { checkTaskExists } from '../utils';
+import { getAttachInfoList } from './attached-functions/get-attached-info-list';
+import { removeAttached } from './attached-functions/remove-attached-file';
 import { AttachedInfoDto } from './dto/attached-info.dto';
-import { checkAttachedExists } from './utils';
 
 @Injectable()
 export class AttachedService {
@@ -33,12 +34,7 @@ export class AttachedService {
 	}
 
 	async getAttachInfoList(taskId: bigint): Promise<Result<AttachedInfoDto[]>> {
-		const attached = await this.prismaService.attached.findMany({
-			where: { task_id: taskId },
-		});
-		const dtoResult = attached.map(
-			(a) => new AttachedInfoDto({ id: a.id, name: a.name, taskId: a.task_id }),
-		);
+		const dtoResult = await getAttachInfoList(this.prismaService, taskId);
 		return createSuccessResult(dtoResult);
 	}
 
@@ -50,11 +46,15 @@ export class AttachedService {
 			throw new NotExistException({ message: ATTACHED_NOT_EXISTS });
 		}
 		const file = createReadStream(
-			getPathToAttached(this.pathToStorage, attached.id),
+			getPathToAttached(
+				this.pathToStorage,
+				attached.file_hash,
+				attached.file_type,
+			),
 		);
 		const resultDto = new AttachedDto({
 			id: attached.id,
-			name: attached.name,
+			name: attached.file_name,
 			taskId: attached.task_id,
 			file: new StreamableFile(file),
 		});
@@ -62,33 +62,24 @@ export class AttachedService {
 	}
 
 	async attach(taskId: bigint, file: MemoryStorageFile): Promise<Result<null>> {
-		await this.prismaService.$transaction(async (tx) => {
-			await checkTaskExists(tx.tasks, taskId);
+		await checkTaskExists(this.prismaService.tasks, taskId);
 
-			const { id } = await tx.attached.create({
-				data: { name: file.fieldname, task_id: taskId },
-			});
-
-			await new Promise<void>(function (resolve, reject) {
-				const writeStream = createWriteStream(
-					getPathToAttached(this.pathToStorage, id),
-				);
-				writeStream.write(file.buffer);
-				writeStream.on('end', () => resolve());
-				writeStream.on('error', (err) => reject(err));
-			});
+		const fileHash = createHash('md5').update(file.buffer).digest('hex');
+		await new Promise<void>(function (resolve, reject) {
+			const writeStream = createWriteStream(
+				getPathToAttached(this.pathToStorage, fileHash, file.mimetype),
+				{ flags: 'w' },
+			);
+			writeStream.write(file.buffer);
+			writeStream.on('end', () => resolve());
+			writeStream.on('error', (err) => reject(err));
 		});
+
 		return createEmptyResult();
 	}
 
 	async removeAttached(attachedId: bigint): Promise<Result<null>> {
-		await this.prismaService.$transaction(async (tx) => {
-			await checkAttachedExists(tx.attached, attachedId);
-			await rm(getPathToAttached(this.pathToStorage, attachedId), {
-				force: true,
-			});
-			await tx.attached.delete({ where: { id: attachedId } });
-		});
+		await removeAttached(this.prismaService, this.pathToStorage, attachedId);
 		return createEmptyResult();
 	}
 }

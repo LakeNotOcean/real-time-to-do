@@ -9,17 +9,18 @@ import {
 	FileTypeValidator,
 	MaxFileSizeValidator,
 	ParseFilePipe,
-	Query,
 	Res,
 	UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { FastifyReply } from 'fastify';
+import { IdQueryDec } from '../../decorators/id-query.decorator';
 import { AttachFileDescriptionDec } from '../../decorators/methods-decorators/actions/attach-file-description.decorator';
 import { DeleteRequestDec } from '../../decorators/methods-decorators/delete-request.decorator';
 import { GetRequestDec } from '../../decorators/methods-decorators/get-request.decorator';
 import { PostRequestDec } from '../../decorators/methods-decorators/post-request.decorator';
 import { AttachedDto } from '../../dto/attached.dto';
+import { taskIdApiQueryOpt } from '../queries/api-query-task-id-opt';
 import { AttachedService } from './attached.service';
 import { AttachedInfoDto } from './dto/attached-info.dto';
 @Controller()
@@ -32,26 +33,32 @@ export class AttachedController extends BaseApiController {
 	@GetRequestDec({
 		resultType: AttachedInfoDto,
 		isResultArray: true,
-		route: 'all',
-		description: 'get attach list for task',
+		route: 'info',
+		description: 'get information on attached files for task',
+		apiQueryOptions: [taskIdApiQueryOpt],
 	})
-	async getAttachList(@Query() id: bigint) {
-		(await this.attachedService.getAttachList(id)).unwrap();
+	async getAttachList(@IdQueryDec() id: bigint) {
+		(await this.attachedService.getAttachInfoList(id)).unwrap();
 	}
 
-	@GetRequestDec({ resultType: AttachedDto, description: 'get attach by id' })
-	async getAttached(@Query() id: bigint) {
+	@GetRequestDec({
+		resultType: AttachedDto,
+		description: 'get attach by id',
+		apiQueryOptions: [taskIdApiQueryOpt],
+	})
+	async getAttached(@IdQueryDec() id: bigint) {
 		(await this.attachedService.getAttached(id)).unwrap();
 	}
 
 	@PostRequestDec({
 		responseString: 'file upload successfully',
 		description: 'attach file',
+		apiQueryOptions: [taskIdApiQueryOpt],
 	})
 	@UseInterceptors(FileInterceptor('file'))
 	@AttachFileDescriptionDec('20mb jpeg file')
 	async attach(
-		@Query() id: bigint,
+		@IdQueryDec() id: bigint,
 		@Res() response: FastifyReply,
 		@UploadedFile(
 			new ParseFilePipe({
@@ -67,7 +74,7 @@ export class AttachedController extends BaseApiController {
 		return this.Created(response);
 	}
 	@DeleteRequestDec({ responseString: 'file removed successfully' })
-	async removeAttached(@Query() id: bigint) {
+	async removeAttached(@IdQueryDec() id: bigint) {
 		await this.attachedService.removeAttached(id);
 	}
 }

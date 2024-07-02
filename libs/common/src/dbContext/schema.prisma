@@ -8,22 +8,24 @@ datasource db {
 }
 
 model attached {
-  id             BigInt           @id @default(autoincrement())
-  task_id     BigInt              @default(autoincrement())
-  name String @default("is not defined") @db.VarChar(100)
-  tasks       tasks    @relation(fields: [task_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "task_id_fkey")
+  id        BigInt  @id @default(autoincrement())
+  task_id   BigInt  @default(autoincrement())
+  file_name String  @default("is not defined") @db.VarChar(100)
+  file_type String  @db.VarChar(32)
+  file_hash String  @db.VarChar(32)
+  tasks     tasks   @relation(fields: [task_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "task_id_fkey")
 
   @@index([id])
 }
 
 model tasks {
-  id             BigInt           @id(map: "ask_pkey") @default(autoincrement())
-  user_id        BigInt           @default(autoincrement())
-  title          String           @default("is not defined") @db.VarChar(100)
-  description    String?          @db.VarChar(500)
-  status         String           @default("is not defined") @db.VarChar(50)
-  users          users            @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "user_id_fkey")
-  attached attached[]
+  id          BigInt     @id(map: "ask_pkey") @default(autoincrement())
+  user_id     BigInt     @default(autoincrement())
+  title       String     @default("is not defined") @db.VarChar(100)
+  description String?    @db.VarChar(500)
+  status      String     @default("is not defined") @db.VarChar(50)
+  attached    attached[]
+  users       users      @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "user_id_fkey")
 
   @@index([id], map: "task_id_idx")
 }
@@ -35,4 +37,3 @@ model users {
 
   @@index([id], map: "user_id_idx")
 }
-
