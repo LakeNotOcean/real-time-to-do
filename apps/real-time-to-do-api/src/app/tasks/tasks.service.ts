@@ -9,6 +9,7 @@ import { TASK_NOT_EXISTS } from '../constants/not-exist-error-messages.constant'
 import { TaskDto } from '../dto/task.dto';
 import { NotExistException } from '../exceptions';
 import { PrismaService } from '../prisma-wrapper/prisma.service';
+import { checkUserExists } from '../users/utils';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { checkTaskExists } from './utils';
@@ -18,7 +19,17 @@ export class TasksService {
 	constructor(private readonly prismaService: PrismaService) {}
 
 	async create(createTaskDto: CreateTaskDto) {
-		await this.prismaService.tasks.create({ data: createTaskDto });
+		await this.prismaService.$transaction(async (tx) => {
+			await checkUserExists(tx.users, createTaskDto.userId);
+			await tx.tasks.create({
+				data: {
+					description: createTaskDto.description,
+					user_id: createTaskDto.userId,
+					status: createTaskDto.status,
+					title: createTaskDto.title,
+				},
+			});
+		});
 		return createEmptyResult();
 	}
 

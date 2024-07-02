@@ -22,7 +22,7 @@ export function enumValueDec(opt: enumValueDecOptions) {
 		ApiProperty({ required: opt.isRequired, enum: opt.enumType }),
 		opt.isRequired ? IsNotEmpty() : IsOptional(),
 		ValidateIf((_obj, value) => !(!opt.isRequired && isNullOrUndefined(value))),
-		TransformWithValidationErrorDec((_key, value, error) => {
+		TransformWithValidationErrorDec((key, value, error) => {
 			if (typeof value !== 'string') {
 				setValidationErrorConstraint(error, IS_NOT_A_STRING);
 				throw new ValidationException([error]);
@@ -31,7 +31,7 @@ export function enumValueDec(opt: enumValueDecOptions) {
 			if (parseResult.getStatus() != StatusEnum.Success) {
 				setValidationErrorConstraint(error, {
 					key: 'EnumIsNotValid',
-					message: opt.enumType + ' is not valid',
+					message: `"${value}" is not valid enum for ${key}`,
 				});
 				throw new ValidationException([error]);
 			}

@@ -1,15 +1,12 @@
-import {
-	FileInterceptor,
-	MemoryStorageFile,
-	UploadedFile,
-} from '@blazity/nest-file-fastify';
-import { BaseApiController } from '@common';
+import { BaseApiController, toBytes } from '@common';
+import { File, FileInterceptor } from '@nest-lab/fastify-multer';
 import {
 	Controller,
 	FileTypeValidator,
 	MaxFileSizeValidator,
 	ParseFilePipe,
 	Res,
+	UploadedFile,
 	UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
@@ -52,7 +49,7 @@ export class AttachedController extends BaseApiController {
 
 	@PostRequestDec({
 		responseString: 'file upload successfully',
-		description: 'attach file',
+		description: 'attach image/jpeg',
 		apiQueryOptions: [taskIdApiQueryOpt],
 	})
 	@UseInterceptors(FileInterceptor('file'))
@@ -63,12 +60,15 @@ export class AttachedController extends BaseApiController {
 		@UploadedFile(
 			new ParseFilePipe({
 				validators: [
-					new MaxFileSizeValidator({ maxSize: 20000 }),
+					new MaxFileSizeValidator({
+						maxSize: toBytes('20mb'),
+						message: 'the file must not be empty and no larger than 20mb',
+					}),
 					new FileTypeValidator({ fileType: 'image/jpeg' }),
 				],
 			}),
 		)
-		file: MemoryStorageFile,
+		file: File,
 	) {
 		await this.attachedService.attach(id, file);
 		return this.Created(response);

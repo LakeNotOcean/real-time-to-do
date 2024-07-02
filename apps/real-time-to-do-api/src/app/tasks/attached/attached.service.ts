@@ -1,5 +1,5 @@
-import { MemoryStorageFile } from '@blazity/nest-file-fastify';
 import { createEmptyResult, createSuccessResult, Result } from '@common';
+import { File } from '@nest-lab/fastify-multer';
 import { Injectable, StreamableFile } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { createHash } from 'crypto';
@@ -61,10 +61,9 @@ export class AttachedService {
 		return createSuccessResult(resultDto);
 	}
 
-	async attach(taskId: bigint, file: MemoryStorageFile): Promise<Result<null>> {
+	async attach(taskId: bigint, file: File): Promise<Result<null>> {
 		await checkTaskExists(this.prismaService.tasks, taskId);
-
-		const fileHash = createHash('md5').update(file.buffer).digest('hex');
+		const fileHash = createHash('md5').update(file.buffer!).digest('hex');
 		await new Promise<void>(function (resolve, reject) {
 			const writeStream = createWriteStream(
 				getPathToAttached(this.pathToStorage, fileHash, file.mimetype),

@@ -7,6 +7,7 @@ export * from './dbContext';
 export * from './decorators';
 export * from './enums';
 export * from './exceptions';
+export * from './file-utils';
 export * from './loggers';
 export * from './map-utils';
 export * from './parse-utils';

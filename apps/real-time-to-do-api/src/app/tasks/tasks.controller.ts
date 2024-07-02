@@ -46,16 +46,19 @@ export class TasksController extends BaseApiController {
 		description: 'get task',
 	})
 	async findOne(@IdQueryDec() id: bigint) {
-		return (await this.tasksService.findOne(id)).unwrap();
+		await this.tasksService.findOne(id);
+		return;
 	}
 
 	@PatchRequestDec({ responseString: 'task name changed successfully' })
 	async update(@IdQueryDec() id: bigint, @Body() updateTaskDto: UpdateTaskDto) {
-		return (await this.tasksService.update(id, updateTaskDto)).unwrap();
+		await this.tasksService.update(id, updateTaskDto);
+		return;
 	}
 
 	@DeleteRequestDec({ responseString: 'task removed successfully' })
 	async remove(@IdQueryDec() id: bigint) {
-		return (await this.tasksService.remove(id)).unwrap();
+		await this.tasksService.remove(id);
+		return;
 	}
 }

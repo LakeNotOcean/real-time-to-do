@@ -51,11 +51,13 @@ export class UsersController extends BaseApiController {
 
 	@PatchRequestDec({ responseString: 'user name changed successfully' })
 	async update(@IdQueryDec() id: bigint, @Body() updateUserDto: UpdateUserDto) {
-		return (await this.usersService.update(id, updateUserDto)).unwrap();
+		await this.usersService.update(id, updateUserDto);
+		return;
 	}
 
 	@DeleteRequestDec({ responseString: 'user removed successfully' })
 	async remove(@IdQueryDec() id: bigint) {
-		return (await this.usersService.remove(id)).unwrap();
+		await this.usersService.remove(id);
+		return;
 	}
 }
