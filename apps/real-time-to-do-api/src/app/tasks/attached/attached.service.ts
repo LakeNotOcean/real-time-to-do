@@ -1,17 +1,17 @@
 import { createEmptyResult, createSuccessResult, Result } from '@common';
 import { File } from '@nest-lab/fastify-multer';
-import { Injectable, StreamableFile } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { existsSync, mkdirSync } from 'fs';
 import { join } from 'path';
 import { STORAGE_DIR_NAME } from '../../constants/path.constant';
-import { AttachedDto } from '../../dto/attached.dto';
 import { PrismaService } from '../../prisma-wrapper/prisma.service';
 import { addAttachedFile } from './attached-functions/add-attached-file';
 import { getAttachedFile } from './attached-functions/get-attached-file';
 import { getAttachInfoList } from './attached-functions/get-attached-info-list';
 import { removeAttached } from './attached-functions/remove-attached-file';
 import { AttachedInfoDto } from './dto/attached-info.dto';
+import { AttachedStreamDto } from './dto/attached-stream.dto';
 
 @Injectable()
 export class AttachedService {
@@ -42,19 +42,14 @@ export class AttachedService {
 		return createSuccessResult(dtoResult);
 	}
 
-	async getAttached(attachedId: bigint): Promise<Result<AttachedDto>> {
-		const { attached, fileStream } = await getAttachedFile(
+	async getAttached(attachedId: bigint): Promise<Result<AttachedStreamDto>> {
+		const attachedDto = await getAttachedFile(
 			this.prismaService,
 			this.pathToStorage,
 			attachedId,
 		);
-		const resultDto = new AttachedDto({
-			id: attached.id,
-			name: attached.file_name,
-			taskId: attached.task_id,
-			fileStream: new StreamableFile(fileStream),
-		});
-		return createSuccessResult(resultDto);
+
+		return createSuccessResult(attachedDto);
 	}
 
 	async attach(taskId: bigint, file: File): Promise<Result<bigint>> {

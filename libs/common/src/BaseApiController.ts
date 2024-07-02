@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { FastifyReply } from 'fastify';
+import { ReadStream } from 'fs';
 import { JsonLogger } from './';
 
 export class BaseApiController {
@@ -53,5 +54,13 @@ export class BaseApiController {
 			},
 			HttpStatus.INTERNAL_SERVER_ERROR,
 		);
+	}
+	protected SendReadFileStream(
+		response: FastifyReply,
+		stream: ReadStream,
+		mimetype: string,
+	) {
+		response.type(mimetype);
+		this.Ok<ReadStream>(response, stream);
 	}
 }
