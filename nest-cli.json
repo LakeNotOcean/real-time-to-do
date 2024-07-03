@@ -19,6 +19,15 @@
 				"tsConfigPath": "apps/real-time-to-do-api/tsconfig.app.json"
 			}
 		},
+		"real-time-queue-publish-service": {
+			"type": "application",
+			"root": "apps/real-time-queue-publish-service",
+			"entryFile": "main",
+			"sourceRoot": "apps/real-time-queue-publish-service/src",
+			"compilerOptions": {
+				"tsConfigPath": "apps/real-time-queue-publish-service/tsconfig.app.json"
+			}
+		},
 		"common": {
 			"type": "library",
 			"root": "libs/common",

@@ -1,0 +1,1 @@
+export const ASYNC_RABBITMQ = 'ASYNC RABBITMQ';
