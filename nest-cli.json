@@ -2,12 +2,12 @@
 	"$schema": "https://json.schemastore.org/nest-cli",
 	"collection": "@nestjs/schematics",
 	"monorepo": true,
-	"root": "apps/real-time-to-do-api",
-	"sourceRoot": "apps/real-time-to-do-api/src",
+	"root": "apps/real-time-queue-publish-service",
+	"sourceRoot": "apps/real-time-queue-publish-service/src",
 	"compilerOptions": {
 		"webpack": true,
 		"typeCheck": true,
-		"tsConfigPath": "apps/real-time-to-do-api/tsconfig.app.json"
+		"tsConfigPath": "apps/real-time-queue-publish-service/tsconfig.app.json"
 	},
 	"projects": {
 		"real-time-to-do-api": {

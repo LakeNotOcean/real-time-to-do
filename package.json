@@ -14,7 +14,7 @@
 		"QUEUE PUBLISH SCRIPTS": "",
 		"queue-publish-service:build": "nest build real-time-queue-publish-service",
 		"queue-publish-service:debug": "cross-env NODE_ENV=dev nest start real-time-queue-publish-service --debug --watch",
-		"queue-publish-service:serve-dev": "cross-env NODE_ENV=dev nest real-time-queue-publish-service"
+		"queue-publish-service:serve-dev": "cross-env NODE_ENV=dev nest start real-time-queue-publish-service"
 	},
 	"private": true,
 	"dependencies": {
@@ -25,6 +25,7 @@
 		"@nestjs/config": "^3.2.2",
 		"@nestjs/core": "^10.3.9",
 		"@nestjs/microservices": "^10.3.10",
+		"@nestjs/platform-express": "^10.3.10",
 		"@nestjs/platform-fastify": "^10.3.9",
 		"@nestjs/swagger": "^7.3.1",
 		"@prisma/client": "^5.15.0",
@@ -39,6 +40,7 @@
 		"nestjs-pino": "^4.1.0",
 		"pino-pretty": "^11.2.0",
 		"rabbitmq-client": "^4.6.0",
+		"rabbitmq-stream-js-client": "^0.3.1",
 		"reflect-metadata": "^0.2.2",
 		"rxjs": "^7.8.0"
 	},

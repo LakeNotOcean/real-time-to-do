@@ -8,14 +8,15 @@ import { AppModule } from './app.module';
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
 	const configService = app.get(ConfigService);
+
 	app.connectMicroservice<MicroserviceOptions>({
 		strategy: new PgNotifyServer({
 			connection: {
 				host: configService.getOrThrow<string>('postgresHost'),
 				port: Number(configService.getOrThrow<number>('postgresPort')),
-				database: configService.getOrThrow<string>('postgresConfigDatabase'),
-				user: configService.getOrThrow<string>('postgresConfigUsername'),
-				password: configService.getOrThrow<string>('postgresConfigPassword'),
+				database: configService.getOrThrow<string>('postgresDatabase'),
+				user: configService.getOrThrow<string>('postgresUsername'),
+				password: configService.getOrThrow<string>('postgresPassword'),
 			},
 			logger: app.get(Logger),
 			strategy: {
@@ -25,6 +26,12 @@ async function bootstrap() {
 		}),
 	});
 	app.useLogger(app.get(Logger));
+
 	await app.startAllMicroservices();
+
+	const port = Number(
+		configService.getOrThrow<number>('queuePublishServerPort'),
+	);
+	await app.listen(port);
 }
 bootstrap();

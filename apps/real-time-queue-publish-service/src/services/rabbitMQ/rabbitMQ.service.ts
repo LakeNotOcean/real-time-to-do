@@ -12,7 +12,7 @@ export class RabbitMQService {
 	constructor(private readonly configService: ConfigService) {
 		this.exchangeName = configService.getOrThrow<string>('rmqRangeExchange');
 	}
-	async initConnection() {
+	initConnection() {
 		this.amqpConnection = new Connection(
 			'amqp://' +
 				this.configService.getOrThrow<string>('rmqUser') +
@@ -26,30 +26,40 @@ export class RabbitMQService {
 		);
 	}
 	async exchangeDeclare() {
-		await this.amqpConnection.exchangeDeclare({
-			exchange: this.exchangeName,
-			type: 'topic',
-			durable: true,
-			autoDelete: false,
-		});
+		return this.pomiseWrapper(() =>
+			this.amqpConnection.exchangeDeclare({
+				exchange: this.exchangeName,
+				type: 'topic',
+				durable: true,
+				autoDelete: false,
+			}),
+		);
 	}
 	async queueDeclare(queueName: string) {
-		await this.amqpConnection.queueDeclare({
-			queue: queueName,
-			durable: false,
-			autoDelete: false,
-			exclusive: false,
-			arguments: { 'x-expires': toMilliseconds('15min') },
-		});
+		return this.pomiseWrapper(() =>
+			this.amqpConnection.queueDeclare({
+				queue: queueName,
+				durable: false,
+				autoDelete: false,
+				exclusive: false,
+				arguments: { 'x-expires': toMilliseconds('15min') },
+			}),
+		);
 	}
 	async queueBind(queueName: string, routingKey: string) {
-		await this.amqpConnection.queueBind({
-			exchange: this.exchangeName,
-			queue: queueName,
-			routingKey,
-		});
+		return this.pomiseWrapper(() =>
+			this.amqpConnection.queueBind({
+				exchange: this.exchangeName,
+				queue: queueName,
+				routingKey,
+			}),
+		);
 	}
-	async createPublisher() {
+
+	createPublisher() {
+		this.amqpConnection.on('error', (err) => {
+			throw err;
+		});
 		this.amqpPublisher = this.amqpConnection.createPublisher({
 			confirm: true,
 			maxAttempts: 3,
@@ -57,9 +67,22 @@ export class RabbitMQService {
 		});
 	}
 	async publishMessage(routingKey: string, message: object) {
-		await this.amqpPublisher.send(
-			{ exchange: this.exchangeName, routingKey },
-			message,
+		return this.pomiseWrapper(() =>
+			this.amqpPublisher.send(
+				{ exchange: this.exchangeName, routingKey },
+				message,
+			),
 		);
+	}
+	protected setErrorHandler(reject: (reason?: any) => void) {
+		this.amqpConnection.on('error', (err) => reject(err));
+	}
+	protected pomiseWrapper<T>(promiseFucntion: () => Promise<T>): Promise<T> {
+		return new Promise<T>((resolve, reject) => {
+			this.setErrorHandler(reject);
+			promiseFucntion()
+				.then((res: T) => resolve(res))
+				.catch((err) => reject(err));
+		});
 	}
 }
