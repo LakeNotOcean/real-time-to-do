@@ -2,6 +2,7 @@ import { toMilliseconds } from '@common';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Connection, Publisher } from 'rabbitmq-client';
+import { DURABLE, TYPE } from '../constants';
 
 @Injectable()
 export class RabbitMQService {
@@ -29,8 +30,8 @@ export class RabbitMQService {
 		return this.pomiseWrapper(() =>
 			this.amqpConnection.exchangeDeclare({
 				exchange: this.exchangeName,
-				type: 'topic',
-				durable: true,
+				type: TYPE,
+				durable: DURABLE,
 				autoDelete: false,
 			}),
 		);
@@ -39,7 +40,7 @@ export class RabbitMQService {
 		return this.pomiseWrapper(() =>
 			this.amqpConnection.queueDeclare({
 				queue: queueName,
-				durable: false,
+				durable: DURABLE,
 				autoDelete: false,
 				exclusive: false,
 				arguments: { 'x-expires': toMilliseconds('15min') },
@@ -63,13 +64,25 @@ export class RabbitMQService {
 		this.amqpPublisher = this.amqpConnection.createPublisher({
 			confirm: true,
 			maxAttempts: 3,
-			exchanges: [{ exchange: this.exchangeName }],
+			exchanges: [
+				{
+					exchange: this.exchangeName,
+					type: TYPE,
+					durable: DURABLE,
+					autoDelete: false,
+				},
+			],
 		});
 	}
 	async publishMessage(routingKey: string, message: object) {
 		return this.pomiseWrapper(() =>
 			this.amqpPublisher.send(
-				{ exchange: this.exchangeName, routingKey },
+				{
+					exchange: this.exchangeName,
+					routingKey,
+					type: TYPE,
+					durable: DURABLE,
+				},
 				message,
 			),
 		);

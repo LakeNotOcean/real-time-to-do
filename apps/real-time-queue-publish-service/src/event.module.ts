@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ASYNC_RABBITMQ } from './services/constants';
-import { PgNotifyService } from './services/pgNotify/pg-notify.service';
+import { PgNotifyController } from './services/pgNotify/pg-notify.service';
 import { initRabbitMQService } from './services/rabbitMQ/init-rabbitMQ-service';
 import { RabbitMQService } from './services/rabbitMQ/rabbitMQ.service';
 
@@ -16,7 +16,7 @@ import { RabbitMQService } from './services/rabbitMQ/rabbitMQ.service';
 				return service;
 			},
 		},
-		PgNotifyService,
 	],
+	controllers: [PgNotifyController],
 })
 export class EventModule {}

@@ -1,5 +1,5 @@
 import { JsonLogger } from '@common';
-import { Inject, Injectable, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Controller, Inject, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Payload } from '@nestjs/microservices';
 import { PgNotifyMessagePattern } from 'nestjs-pg-notify';
 import { firstValueFrom } from 'rxjs';
@@ -9,9 +9,9 @@ import { rabbitMQPublishMessage } from '../rabbitMQ/rabbitMQ-publish-message';
 import { RabbitMQService } from '../rabbitMQ/rabbitMQ.service';
 import { DbData, TaskDbData } from './dto/dbData.dto';
 
-@Injectable()
-export class PgNotifyService {
-	private readonly logger = new JsonLogger(PgNotifyService.name);
+@Controller()
+export class PgNotifyController {
+	private readonly logger = new JsonLogger(PgNotifyController.name);
 
 	constructor(
 		@Inject(ASYNC_RABBITMQ)

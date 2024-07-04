@@ -11,13 +11,13 @@ services:
       - ../rabbitMQ/rabbitmq-test.conf:/etc/rabbitmq/rabbitmq.conf
       - ../rabbitMQ/logs:/var/log/rabbitmq
     ports:
-      - '0.0.0.0:${rabbitMQPort}:5672'
-      - '0.0.0.0:${rabbitMQHttpPort}:15672'
+      - '0.0.0.0:${rmqPort}:5672'
+      - '0.0.0.0:${rmqHttpPort}:15672'
     networks:
-      - socket-network
+      - real-time-to-do-network
     environment:
-      - RABBITMQ_DEFAULT_USER=${rabbitMQUser}
-      - RABBITMQ_DEFAULT_PASS=${rabbitMQPassword}
+      - RABBITMQ_DEFAULT_USER=${rmqUser}
+      - RABBITMQ_DEFAULT_PASS=${rmqPassword}
     logging:
       driver: 'json-file'
       options:
