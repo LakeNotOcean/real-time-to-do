@@ -48,3 +48,7 @@ Thumbs.db
 # attached files
 
 /attached
+
+# rabbitMQ
+
+/rabbitMQ/logs

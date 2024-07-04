@@ -22,11 +22,11 @@ done
 
 case $type in
     (restart)
-        command="docker restart docker-services-$service_env";
+        command="docker restart rabbitmq-service-$service_env";
         ;;
     (start)
-        command="docker compose -f docker-services.yml \
-        --env-file ../env/$service_env.env -p docker-services-$service_env --ansi never up --force-recreate  -d --build"
+        command="docker compose -f rabbitmq-docker-service.yml \
+        --env-file ../env/$service_env.env -p rabbitmq-service-$service_env --ansi never up --force-recreate  -d --build"
         type="start";
         ;;
     (*)
