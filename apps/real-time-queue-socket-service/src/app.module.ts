@@ -2,14 +2,13 @@ import { generalConfig, getPinoLoggerConfig } from '@common';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { LoggerModule } from 'nestjs-pino';
-import { PublishModule } from './publish.module';
+import { EventModule } from './event.module';
 
 @Module({
 	imports: [
 		ConfigModule.forRoot({
 			ignoreEnvFile: true,
 			isGlobal: true,
-			cache: true,
 			load: [generalConfig],
 		}),
 		LoggerModule.forRootAsync({
@@ -17,7 +16,7 @@ import { PublishModule } from './publish.module';
 				getPinoLoggerConfig(configService),
 			inject: [ConfigService],
 		}),
-		PublishModule,
+		EventModule,
 	],
 })
 export class AppModule {}

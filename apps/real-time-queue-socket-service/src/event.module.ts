@@ -1,12 +1,13 @@
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { ASYNC_RABBITMQ } from './services/constants';
-import { PgNotifyController } from './services/pgNotify/pg-notify.service';
-import { initRabbitMQService } from './services/rabbitMQ/init-rabbitMQ-service';
+import { ASYNC_RABBITMQ } from '@rabbitmq';
+import { initRabbitMQService } from './services/rabbitMQ/init-rabbitMQ.service';
 import { RabbitMQService } from './services/rabbitMQ/rabbitMQ.service';
+import { SocketGateway } from './services/socket/socket.gateway';
 
 @Module({
 	providers: [
+		SocketGateway,
 		{
 			provide: ASYNC_RABBITMQ,
 			inject: [ConfigService],
@@ -17,6 +18,5 @@ import { RabbitMQService } from './services/rabbitMQ/rabbitMQ.service';
 			},
 		},
 	],
-	controllers: [PgNotifyController],
 })
 export class EventModule {}

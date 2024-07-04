@@ -1,10 +1,9 @@
 import { JsonLogger } from '@common';
 import { Controller, Inject, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Payload } from '@nestjs/microservices';
+import { ASYNC_RABBITMQ, createRoutingKey } from '@rabbitmq';
 import { PgNotifyMessagePattern } from 'nestjs-pg-notify';
 import { firstValueFrom } from 'rxjs';
-import { createRouingKey } from '../../utils/create-routing-key';
-import { ASYNC_RABBITMQ } from '../constants';
 import { rabbitMQPublishMessage } from '../rabbitMQ/rabbitMQ-publish-message';
 import { RabbitMQService } from '../rabbitMQ/rabbitMQ.service';
 import { DbData, TaskDbData } from './dto/dbData.dto';
@@ -24,7 +23,7 @@ export class PgNotifyController {
 		this.logger.debug({ message: 'message received from database', payload });
 		const observable = await rabbitMQPublishMessage(
 			this.rabbitMQService,
-			createRouingKey(payload.newData.id, payload.newData.userId),
+			createRoutingKey(payload.newData.id),
 			payload.newData,
 		);
 		try {

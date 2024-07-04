@@ -14,7 +14,11 @@
 		"QUEUE PUBLISH SCRIPTS": "",
 		"queue-publish-service:build": "nest build real-time-queue-publish-service",
 		"queue-publish-service:debug": "cross-env NODE_ENV=dev nest start real-time-queue-publish-service --debug --watch",
-		"queue-publish-service:serve-dev": "cross-env NODE_ENV=dev nest start real-time-queue-publish-service"
+		"queue-publish-service:serve-dev": "cross-env NODE_ENV=dev nest start real-time-queue-publish-service",
+		"QUEUE SOCKET SCRIPTS": "",
+		"queue-socket-service:build": "nest build real-time-queue-socket-service",
+		"queue-socket-service:debug": "cross-env NODE_ENV=dev nest start real-time-queue-socket-service --debug --watch",
+		"queue-socket-service:serve-dev": "cross-env NODE_ENV=dev nest start real-time-queue-socket-service"
 	},
 	"private": true,
 	"dependencies": {
@@ -27,7 +31,9 @@
 		"@nestjs/microservices": "^10.3.10",
 		"@nestjs/platform-express": "^10.3.10",
 		"@nestjs/platform-fastify": "^10.3.9",
+		"@nestjs/platform-socket.io": "^10.3.10",
 		"@nestjs/swagger": "^7.3.1",
+		"@nestjs/websockets": "^10.3.10",
 		"@prisma/client": "^5.15.0",
 		"class-transformer": "^0.5.1",
 		"class-validator": "^0.14.1",

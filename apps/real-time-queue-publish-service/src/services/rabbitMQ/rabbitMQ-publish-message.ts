@@ -1,6 +1,6 @@
 import { JsonLogger, toMilliseconds } from '@common';
+import { rxjsCatchErrorWithLog } from '@rabbitmq';
 import { defer, Observable, retry } from 'rxjs';
-import { rxjsCatchErrorWithLog } from '../../utils/rxjs.catch-error';
 import { RabbitMQService } from './rabbitMQ.service';
 
 const logger = new JsonLogger('rabbitMQPublishMessage');

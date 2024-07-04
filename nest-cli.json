@@ -2,12 +2,12 @@
 	"$schema": "https://json.schemastore.org/nest-cli",
 	"collection": "@nestjs/schematics",
 	"monorepo": true,
-	"root": "apps/real-time-queue-publish-service",
-	"sourceRoot": "apps/real-time-queue-publish-service/src",
+	"root": "apps/real-time-queue-socket-service",
+	"sourceRoot": "apps/real-time-queue-socket-service/src",
 	"compilerOptions": {
 		"webpack": true,
 		"typeCheck": true,
-		"tsConfigPath": "apps/real-time-queue-publish-service/tsconfig.app.json"
+		"tsConfigPath": "apps/real-time-queue-socket-service/tsconfig.app.json"
 	},
 	"projects": {
 		"real-time-to-do-api": {
@@ -28,6 +28,15 @@
 				"tsConfigPath": "apps/real-time-queue-publish-service/tsconfig.app.json"
 			}
 		},
+		"real-time-queue-socket-service": {
+			"type": "application",
+			"root": "apps/real-time-queue-socket-service",
+			"entryFile": "main",
+			"sourceRoot": "apps/real-time-queue-socket-service/src",
+			"compilerOptions": {
+				"tsConfigPath": "apps/real-time-queue-socket-service/tsconfig.app.json"
+			}
+		},
 		"common": {
 			"type": "library",
 			"root": "libs/common",
@@ -35,6 +44,15 @@
 			"sourceRoot": "libs/common/src",
 			"compilerOptions": {
 				"tsConfigPath": "libs/common/tsconfig.lib.json"
+			}
+		},
+		"rabbitmq": {
+			"type": "library",
+			"root": "libs/rabbitMQ",
+			"entryFile": "index",
+			"sourceRoot": "libs/rabbitMQ/src",
+			"compilerOptions": {
+				"tsConfigPath": "libs/rabbitMQ/tsconfig.lib.json"
 			}
 		}
 	}

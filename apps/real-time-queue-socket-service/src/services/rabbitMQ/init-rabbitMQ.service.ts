@@ -11,7 +11,6 @@ export async function initRabbitMQService(
 	defer(async () => {
 		rabbitMQService.initConnection();
 		await rabbitMQService.exchangeDeclare();
-		rabbitMQService.createPublisher();
 	})
 		.pipe(rxjsCatchErrorWithLog(logger), retry({ delay: toMilliseconds('5s') }))
 		.subscribe();

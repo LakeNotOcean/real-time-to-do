@@ -19,7 +19,8 @@
 		"forceConsistentCasingInFileNames": false,
 		"noFallthroughCasesInSwitch": false,
 		"paths": {
-			"@common": ["./libs/common/src/index"]
+			"@common": ["./libs/common/src/index"],
+			"@rabbitmq": ["./libs/rabbitMQ/src/index"]
 		}
 	}
 }
