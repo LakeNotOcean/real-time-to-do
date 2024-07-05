@@ -1,7 +1,8 @@
-import { getDatabaseUrl, toMilliseconds } from '@common';
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaClient } from '@prisma/client';
+import { getDatabaseUrl } from '../dbContext/database-config';
+import { toMilliseconds } from '../time-utils';
 
 export type PrismaServiceConfig = {
 	datasources: { db: { url: string } };

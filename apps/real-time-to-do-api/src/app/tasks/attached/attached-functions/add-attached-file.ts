@@ -1,5 +1,5 @@
+import { PrismaService } from '@common';
 import { File } from '@nest-lab/fastify-multer';
-import { PrismaService } from '../../../prisma-wrapper/prisma.service';
 import { checkTaskExists } from '../../utils';
 import { addAttachedFileToFilesystem } from './add-attached-to-filesystem';
 
@@ -9,9 +9,14 @@ export async function addAttachedFile(
 	pathToStorage: string,
 	file: File,
 ): Promise<bigint> {
-	await checkTaskExists(prismaService.tasks, taskId);
+	const { userId } = await checkTaskExists(prismaService.tasks, taskId);
 
-	const fileHash = await addAttachedFileToFilesystem(file, pathToStorage);
+	const fileHash = await addAttachedFileToFilesystem(
+		file,
+		pathToStorage,
+		userId,
+		taskId,
+	);
 
 	const id = await prismaService.$transaction(async (tx) => {
 		await checkTaskExists(tx.tasks, taskId);

@@ -1,5 +1,5 @@
+import { PrismaService } from '@common';
 import { AttachedEntity } from '../../../entities/Attached.entity';
-import { PrismaService } from '../../../prisma-wrapper/prisma.service';
 import { checkTaskExists } from '../../utils';
 
 export async function getAttachInfoList(

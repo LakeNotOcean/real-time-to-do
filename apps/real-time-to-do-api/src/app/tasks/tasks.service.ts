@@ -1,6 +1,7 @@
 import {
 	createEmptyResult,
 	createSuccessResult,
+	PrismaService,
 	Result,
 	toTaskEnum,
 } from '@common';
@@ -8,7 +9,6 @@ import { Injectable } from '@nestjs/common';
 import { TASK_NOT_EXISTS } from '../constants/not-exist-error-messages.constant';
 import { TaskDto } from '../dto/task.dto';
 import { NotExistException } from '../exceptions';
-import { PrismaService } from '../prisma-wrapper/prisma.service';
 import { checkUserExists } from '../users/utils';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';

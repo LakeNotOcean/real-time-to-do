@@ -1,9 +1,13 @@
-import { createEmptyResult, createSuccessResult, Result } from '@common';
+import {
+	createEmptyResult,
+	createSuccessResult,
+	PrismaService,
+	Result,
+} from '@common';
 import { Injectable } from '@nestjs/common';
 import { USER_NOT_EXISTS } from '../constants/not-exist-error-messages.constant';
 import { UserDto } from '../dto/user.dto';
 import { NotExistException } from '../exceptions';
-import { PrismaService } from '../prisma-wrapper/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { checkUserExists } from './utils';

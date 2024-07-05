@@ -1,11 +1,15 @@
-import { createEmptyResult, createSuccessResult, Result } from '@common';
+import {
+	createEmptyResult,
+	createSuccessResult,
+	PrismaService,
+	Result,
+	STORAGE_DIR_NAME,
+} from '@common';
 import { File } from '@nest-lab/fastify-multer';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { existsSync, mkdirSync } from 'fs';
 import { join } from 'path';
-import { STORAGE_DIR_NAME } from '../../constants/path.constant';
-import { PrismaService } from '../../prisma-wrapper/prisma.service';
 import { addAttachedFile } from './attached-functions/add-attached-file';
 import { getAttachedFile } from './attached-functions/get-attached-file';
 import { getAttachInfoList } from './attached-functions/get-attached-info-list';
