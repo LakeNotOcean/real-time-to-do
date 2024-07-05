@@ -1,15 +1,13 @@
 import {
+	BaseAttchedService,
 	createEmptyResult,
 	createSuccessResult,
 	PrismaService,
 	Result,
-	STORAGE_DIR_NAME,
 } from '@common';
 import { File } from '@nest-lab/fastify-multer';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { existsSync, mkdirSync } from 'fs';
-import { join } from 'path';
 import { addAttachedFile } from './attached-functions/add-attached-file';
 import { getAttachedFile } from './attached-functions/get-attached-file';
 import { getAttachInfoList } from './attached-functions/get-attached-info-list';
@@ -18,20 +16,9 @@ import { AttachedInfoDto } from './dto/attached-info.dto';
 import { AttachedStreamDto } from './dto/attached-stream.dto';
 
 @Injectable()
-export class AttachedService {
-	private readonly pathToStorage: string;
-
-	constructor(
-		private readonly prismaService: PrismaService,
-		configService: ConfigService,
-	) {
-		this.pathToStorage = join(
-			configService.getOrThrow<string>('storagePath'),
-			STORAGE_DIR_NAME,
-		);
-		if (!existsSync(this.pathToStorage)) {
-			mkdirSync(this.pathToStorage, { recursive: true });
-		}
+export class AttachedService extends BaseAttchedService {
+	constructor(prismaService: PrismaService, configService: ConfigService) {
+		super(prismaService, configService);
 	}
 
 	async getAttachInfoList(taskId: bigint): Promise<Result<AttachedInfoDto[]>> {

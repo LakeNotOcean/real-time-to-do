@@ -1,4 +1,5 @@
 export * from './array-utils';
+export * from './Base-attached-service';
 export * from './BaseApiController';
 export * from './compare-utils';
 export * from './configs';
