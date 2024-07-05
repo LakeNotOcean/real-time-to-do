@@ -37,6 +37,15 @@
 				"tsConfigPath": "apps/real-time-queue-socket-service/tsconfig.app.json"
 			}
 		},
+		"real-time-attached-clean-service": {
+			"type": "application",
+			"root": "apps/real-time-attached-clean-service",
+			"entryFile": "main",
+			"sourceRoot": "apps/real-time-attached-clean-service/src",
+			"compilerOptions": {
+				"tsConfigPath": "apps/real-time-attached-clean-service/tsconfig.app.json"
+			}
+		},
 		"common": {
 			"type": "library",
 			"root": "libs/common",
