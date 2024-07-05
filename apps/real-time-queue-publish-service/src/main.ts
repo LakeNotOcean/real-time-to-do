@@ -3,7 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions } from '@nestjs/microservices';
 import { PgNotifyServer } from 'nestjs-pg-notify';
 import { Logger } from 'nestjs-pino';
-import { AppModule } from './app.module';
+import { AppModule } from './app/app.module';
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);

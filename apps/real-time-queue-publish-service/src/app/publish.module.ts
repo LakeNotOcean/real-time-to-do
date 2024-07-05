@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ASYNC_RABBITMQ } from '@rabbitmq';
-import { PgNotifyController } from './services/pgNotify/pg-notify.controller';
-import { initRabbitMQService } from './services/rabbitMQ/init-rabbitMQ-service';
-import { RabbitMQService } from './services/rabbitMQ/rabbitMQ.service';
+import { PgNotifyController } from '../services/pgNotify/pg-notify.controller';
+import { initRabbitMQService } from '../services/rabbitMQ/init-rabbitMQ-service';
+import { RabbitMQService } from '../services/rabbitMQ/rabbitMQ.service';
 
 @Module({
 	providers: [

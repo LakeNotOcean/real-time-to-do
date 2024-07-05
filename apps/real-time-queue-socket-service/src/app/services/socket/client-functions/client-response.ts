@@ -1,4 +1,4 @@
-import { CLIENT_ERROR_CHANNEL } from 'apps/real-time-queue-socket-service/src/constants';
+import { CLIENT_ERROR_CHANNEL } from 'apps/real-time-queue-socket-service/src/app/constants';
 import { Socket } from 'socket.io';
 import { ResultDto } from '../dto/result.dto';
 

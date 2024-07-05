@@ -1,7 +1,7 @@
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import { SocketIoAdapter } from './services/socket/socket-io.adapter';
+import { AppModule } from './app/app.module';
+import { SocketIoAdapter } from './app/services/socket/socket-io.adapter';
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
