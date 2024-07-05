@@ -18,6 +18,7 @@
 		"resolveJsonModule": true,
 		"forceConsistentCasingInFileNames": false,
 		"noFallthroughCasesInSwitch": false,
+		"lib": ["ESNext"],
 		"paths": {
 			"@common": ["./libs/common/src/index"],
 			"@rabbitmq": ["./libs/rabbitMQ/src/index"]

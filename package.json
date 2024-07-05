@@ -18,7 +18,11 @@
 		"QUEUE SOCKET SCRIPTS": "",
 		"queue-socket-service:build": "nest build real-time-queue-socket-service",
 		"queue-socket-service:debug": "cross-env NODE_ENV=dev nest start real-time-queue-socket-service --debug --watch",
-		"queue-socket-service:serve-dev": "cross-env NODE_ENV=dev nest start real-time-queue-socket-service"
+		"queue-socket-service:serve-dev": "cross-env NODE_ENV=dev nest start real-time-queue-socket-service",
+		"ATTACHED CLEAN SCRIPTS": "",
+		"attached-clean-service:build": "nest build real-time-attached-clean-service",
+		"attached-clean-service:debug": "cross-env NODE_ENV=dev nest start real-time-attached-clean-service --debug --watch",
+		"attached-clean-service:serve-dev": "cross-env NODE_ENV=dev nest real-time-attached-clean-service"
 	},
 	"private": true,
 	"dependencies": {

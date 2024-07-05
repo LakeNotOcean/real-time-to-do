@@ -1,6 +1,6 @@
 import { readdirSync } from 'fs';
-import { rm } from 'fs/promises';
 import { join } from 'path';
+import { removeDir } from './remove-dir';
 
 export async function removeIfIdNotExists(
 	selectIdFunction: (id: bigint) => Promise<bigint | null>,
@@ -10,9 +10,7 @@ export async function removeIfIdNotExists(
 	for await (const element of elementsList) {
 		const id = await selectIdFunction(BigInt(element));
 		if (!id) {
-			await rm(join(pathToDir, element), {
-				force: true,
-			});
+			await removeDir(join(pathToDir, element));
 		}
 	}
 }

@@ -27,8 +27,8 @@ export class TasksController extends BaseApiController {
 		@Body() createTaskDto: CreateTaskDto,
 		@Res() response: FastifyReply,
 	) {
-		await this.tasksService.create(createTaskDto);
-		return this.Created(response);
+		const taskId = (await this.tasksService.create(createTaskDto)).unwrap();
+		return this.Created(response, taskId);
 	}
 
 	@GetRequestDec({

@@ -30,14 +30,18 @@ export class CleanAttachedService extends BaseAttchedService {
 		);
 		this.schedulerRegistry.addInterval(
 			CLEAN_UNUSED_DIRS_INTERVAL,
-			setInterval(async function () {
+			setInterval(async () => {
+				this.logger.log('start clean unused dirs');
 				await cleanUnusedDirs(prismaService, this.pathToStorage);
+				this.logger.log('finish clean unused dirs');
 			}, toMilliseconds(cleanUnusedDirsIntervalTime)),
 		);
 		this.schedulerRegistry.addInterval(
 			CLEAN_UNUSED_ATTACHED_INTERVAL,
-			setInterval(async function () {
+			setInterval(async () => {
+				this.logger.log('start clean unused attached');
 				await cleanUnusedAttached(prismaService, this.pathToStorage);
+				this.logger.log('finish clean unused attached');
 			}, toMilliseconds(cleanUnusedAttachedIntervalTime)),
 		);
 	}

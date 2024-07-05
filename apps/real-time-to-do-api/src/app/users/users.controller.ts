@@ -27,8 +27,8 @@ export class UsersController extends BaseApiController {
 		@Body() createUserDto: CreateUserDto,
 		@Res() response: FastifyReply,
 	) {
-		await this.usersService.create(createUserDto);
-		this.Created(response);
+		const userId = (await this.usersService.create(createUserDto)).unwrap();
+		this.Created(response, userId);
 	}
 
 	@GetRequestDec({
