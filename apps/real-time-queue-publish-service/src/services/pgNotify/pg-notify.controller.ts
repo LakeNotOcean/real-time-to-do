@@ -29,7 +29,7 @@ export class PgNotifyController {
 		const observable = await rabbitMQPublishMessage(
 			this.rabbitMQService,
 			routingKey,
-			payload.newData,
+			{ ...payload.newData, timestamp: payload.timestamp },
 		);
 		try {
 			await firstValueFrom(observable);
