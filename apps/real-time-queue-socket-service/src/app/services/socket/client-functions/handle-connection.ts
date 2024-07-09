@@ -11,6 +11,7 @@ import { setHandleDisconnect } from './handle-disconnect';
 export async function handleConnection(
 	client: Socket,
 	rabbitMQService: RabbitMQService,
+	socketTimeout: number,
 	logger: JsonLogger,
 ) {
 	const userToken = getUserTokenFromClient(client);
@@ -19,11 +20,12 @@ export async function handleConnection(
 		client.disconnect(true);
 		return;
 	}
+	const queueKey = createQueueKey(userToken.userId, userToken.sessionId);
 	const consumer = await initConsumer(
 		rabbitMQService,
-		createQueueKey(userToken.userId, userToken.sessionId),
+		queueKey,
 		createRoutingKey(userToken.userId),
-		getConsumerHandler(client),
+		getConsumerHandler(client, socketTimeout),
 		(err: object) => {
 			logger.error(err);
 			client.disconnect(true);

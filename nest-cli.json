@@ -2,12 +2,12 @@
 	"$schema": "https://json.schemastore.org/nest-cli",
 	"collection": "@nestjs/schematics",
 	"monorepo": true,
-	"root": "apps/real-time-attached-clean-service",
-	"sourceRoot": "apps/real-time-attached-clean-service/src",
+	"root": "apps/real-time-queue-socket-service",
+	"sourceRoot": "apps/real-time-queue-socket-service/src",
 	"compilerOptions": {
 		"webpack": true,
 		"typeCheck": true,
-		"tsConfigPath": "apps/real-time-attached-clean-service/tsconfig.app.json"
+		"tsConfigPath": "apps/real-time-queue-socket-service/tsconfig.app.json"
 	},
 	"projects": {
 		"real-time-to-do-api": {

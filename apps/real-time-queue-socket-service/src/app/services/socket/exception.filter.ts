@@ -34,7 +34,7 @@ export class ErrorFilter extends BaseWsExceptionFilter {
 	private readonly logger = new JsonLogger(ErrorFilter.name);
 
 	catch(exception: Error, host: ArgumentsHost): void {
-		const client = host.switchToWs().getClient() as WebSocket;
+		const client = host.switchToWs().getClient() as Socket;
 		const errorMessage = JSON.stringify({
 			name: exception.name,
 			message: exception.message,

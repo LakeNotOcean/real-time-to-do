@@ -9,7 +9,7 @@ export interface DbData<T> {
 
 export interface TaskDbData {
 	id: string;
-	userId: string;
+	user_id: string;
 	title: string;
 	description: string;
 	status: string;

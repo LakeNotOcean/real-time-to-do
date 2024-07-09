@@ -20,10 +20,15 @@ export class PgNotifyController {
 	@PgNotifyMessagePattern('task_change')
 	@UsePipes(new ValidationPipe())
 	async onTaskChange(@Payload() payload: DbData<TaskDbData>) {
-		this.logger.debug({ message: 'message received from database', payload });
+		const routingKey = createRoutingKey(payload.newData.user_id);
+		this.logger.debug({
+			message: 'message received from database',
+			payload,
+			routingKey,
+		});
 		const observable = await rabbitMQPublishMessage(
 			this.rabbitMQService,
-			createRoutingKey(payload.newData.id),
+			routingKey,
 			payload.newData,
 		);
 		try {

@@ -11,6 +11,7 @@ export async function initConsumer(
 ): Promise<Consumer> {
 	const consumerSubsciption = defer(async () => {
 		await rabbitMQService.queueDeclare(queueName);
+		await rabbitMQService.queueBind(queueName, queueName);
 		await rabbitMQService.queueBind(queueName, routingKey);
 		const consumer = rabbitMQService.createConsumer(
 			queueName,

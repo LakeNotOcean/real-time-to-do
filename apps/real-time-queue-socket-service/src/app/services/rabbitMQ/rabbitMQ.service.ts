@@ -11,14 +11,19 @@ import { ConsumerHandler } from 'rabbitmq-client';
 
 @Injectable()
 export class RabbitMQService extends RabbitMQBaseService {
+	private readonly queueExpireIn: number;
+
 	constructor(configService: ConfigService) {
 		super(configService);
+		this.queueExpireIn = toMilliseconds(
+			configService.getOrThrow<string>('rmqQueueExpiresIn'),
+		);
 	}
 	async queueDeclare(queueName: string) {
 		return this.pomiseWrapper(() =>
 			this.amqpConnection.queueDeclare({
 				queue: queueName,
-				...queueOptions,
+				...getQueueOptions(this.queueExpireIn),
 			}),
 		);
 	}
@@ -39,7 +44,7 @@ export class RabbitMQService extends RabbitMQBaseService {
 		const consumer = this.amqpConnection.createConsumer(
 			{
 				queue: queueName,
-				queueOptions,
+				queueOptions: getQueueOptions(this.queueExpireIn),
 				noAck: false,
 			},
 			handler,
@@ -49,9 +54,11 @@ export class RabbitMQService extends RabbitMQBaseService {
 	}
 }
 
-const queueOptions = {
-	durable: DURABLE,
-	autoDelete: AUTO_DEPETE,
-	exclusive: EXCLUSIVE,
-	arguments: { 'x-expires': toMilliseconds('15min') },
-};
+function getQueueOptions(expiresIn: number): object {
+	return {
+		durable: DURABLE,
+		autoDelete: AUTO_DEPETE,
+		exclusive: EXCLUSIVE,
+		arguments: { 'x-expires': expiresIn },
+	};
+}

@@ -22,7 +22,7 @@
 		"ATTACHED CLEAN SCRIPTS": "",
 		"attached-clean-service:build": "nest build real-time-attached-clean-service",
 		"attached-clean-service:debug": "cross-env NODE_ENV=dev nest start real-time-attached-clean-service --debug --watch",
-		"attached-clean-service:serve-dev": "cross-env NODE_ENV=dev nest real-time-attached-clean-service"
+		"attached-clean-service:serve-dev": "cross-env NODE_ENV=dev nest start real-time-attached-clean-service"
 	},
 	"private": true,
 	"dependencies": {

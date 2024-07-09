@@ -1,5 +1,6 @@
-import { JsonLogger } from '@common';
+import { JsonLogger, toMilliseconds } from '@common';
 import { Inject, UseFilters } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import {
 	OnGatewayConnection,
 	WebSocketGateway,
@@ -14,6 +15,7 @@ import { ErrorFilter, WsExceptionsFilter } from './exception.filter';
 @WebSocketGateway()
 export class SocketGateway implements OnGatewayConnection {
 	protected readonly logger = new JsonLogger(SocketGateway.name);
+	protected readonly socketTimeout: number;
 
 	@WebSocketServer()
 	protected server: Server;
@@ -21,10 +23,20 @@ export class SocketGateway implements OnGatewayConnection {
 	constructor(
 		@Inject(ASYNC_RABBITMQ)
 		private readonly rabbitMQService: RabbitMQService,
-	) {}
+		configService: ConfigService,
+	) {
+		this.socketTimeout = toMilliseconds(
+			configService.getOrThrow<string>('socketTimeout'),
+		);
+	}
 
 	@UseFilters(new WsExceptionsFilter(), new ErrorFilter())
 	async handleConnection(client: Socket) {
-		await handleConnection(client, this.rabbitMQService, this.logger);
+		await handleConnection(
+			client,
+			this.rabbitMQService,
+			this.socketTimeout,
+			this.logger,
+		);
 	}
 }
